@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BarIAscore — scores validados para cirugía bariátrica</title>
+<style>
+:root{--navy:#1B2F4E;--navy2:#2A4466;--sky:#B5C7DF;--sky2:#E3EAF4;--bg:#F3F6FA;--gold:#B8964F;--ink:#16243A;--mute:#4D5F75;--line:#D3DCE7;
+--red:#B3261E;--redbg:#FCEBEA;--redbd:#E7A6A2;--amb:#7A4A00;--ambbg:#FFF3DC;--ambbd:#E6C27A;--ok:#1E4F7A;--okbg:#E4EEF8;--na:#55657A;--nabg:#EDF0F4}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.45}
+button,input,select{font:inherit;color:inherit}
+a{color:var(--navy2)}
+header.top{background:var(--navy);color:#fff;border-bottom:3px solid var(--gold)}
+.top-in{max-width:1320px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;flex:1;min-width:220px}
+.brand img{width:52px;height:52px;border-radius:50%;background:#fff}
+.brand h1{margin:0;font-size:22px;letter-spacing:.3px}
+.brand p{margin:0;font-size:13px;color:#C9D6E8}
+.top-actions{display:flex;gap:8px}
+.btn{min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--sky);background:transparent;color:#fff;font-weight:600;cursor:pointer}
+.btn.solid{background:#fff;color:var(--navy);border-color:#fff}
+.btn:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible,.tab:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+#dataCol,#resultsCol,.grid2>*,.checks>*{min-width:0}
+.f select,.f input[type=number]{width:100%;min-width:0}
+main{max-width:1320px;margin:0 auto;padding:14px 20px 90px}
+#dataCol{display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:start}
+#dataCol .panel+.panel{margin-top:0}
+.steps{position:sticky;top:0;z-index:6;background:#fff;border-bottom:1px solid var(--line)}
+.steps-in{max-width:1320px;margin:0 auto;padding:8px 20px;display:flex;gap:6px;align-items:center}
+.step{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--navy);font-weight:600;cursor:pointer;font-size:14px}
+.step span.n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--sky2);font-size:12.5px;font-weight:700}
+.step[aria-current="step"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.step[aria-current="step"] span.n{background:var(--gold);color:var(--navy)}
+.step-sep{width:18px;height:2px;background:var(--line)}
+.step-fu{margin-left:auto}
+.actionbar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:#fff;border-top:1px solid var(--line);box-shadow:0 -4px 14px rgba(27,47,78,.08)}
+.ab-in{max-width:1320px;margin:0 auto;padding:10px 20px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;align-items:center}
+#abInfo{flex:1;font-size:13.5px;color:var(--mute)}
+#abInfo b{color:var(--navy)}
+.cta{min-height:46px;padding:0 20px;border-radius:10px;border:1px solid var(--navy);background:var(--navy);color:#fff;font-weight:700;cursor:pointer;font-size:15px}
+.cta:disabled{opacity:.45;cursor:not-allowed}
+.cta.ghost{background:#fff;color:var(--navy)}
+.badge{display:inline-block;min-width:20px;padding:0 6px;border-radius:10px;background:var(--red);color:#fff;font-size:12px;line-height:20px;text-align:center}
+.rhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.rtop{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.rtop>*{margin:0!important}
+#form{columns:3 250px;column-gap:22px}
+#form .sec{break-inside:avoid;border:0;margin:0 0 14px;padding:0}
+#form .empty{column-span:all}
+body:not([data-view="resultados"]) #resultsCol{display:none}
+body[data-view="resultados"] #dataCol,body[data-view="fuentes"] #dataCol{display:none}
+body:not([data-view="fuentes"]) #fuentes{display:none}
+body:not([data-view="resultados"]) footer{display:none}
+@media (min-width:901px){ .dom-r{display:none} body[data-view="scores"] .step[data-go="datos"],body[data-view="datos"] .step[data-go="scores"]{background:var(--navy);border-color:var(--navy);color:#fff} body[data-view="scores"] .step[data-go="datos"] span.n,body[data-view="datos"] .step[data-go="scores"] span.n{background:var(--gold);color:var(--navy)} }
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+.panel+.panel{margin-top:14px}
+h2{margin:0 0 4px;font-size:17px;color:var(--navy)}
+h3{margin:0;font-size:15px;color:var(--navy)}
+.sub{font-size:12.5px;color:var(--mute);margin:0}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.count{font-size:13px;font-weight:700;color:var(--navy2)}
+.mini{min-height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--navy);background:#fff;color:var(--navy);font-weight:600;cursor:pointer;font-size:13px}
+.mini.fill{background:var(--navy);color:#fff}
+.dom{margin-top:10px}
+.dom-t{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--mute);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-height:36px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.lvl{font-size:10.5px;font-weight:700;border-radius:5px;padding:1px 5px;background:var(--sky2);color:var(--navy)}
+.chip[aria-pressed="true"] .lvl{background:var(--gold);color:#1B2F4E}
+fieldset{border:0;margin:0;padding:0}
+.sec{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+.sec:first-child{border-top:0;margin-top:0;padding-top:0}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.used{font-size:11.5px;color:var(--mute);text-align:right}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.f{display:flex;flex-direction:column;gap:3px;font-size:12.5px;font-weight:600;color:#33475E}
+.f input[type=number],.f select{height:38px;border:1px solid #B8C6D6;border-radius:9px;padding:0 10px;background:#fff;font-weight:400;font-size:15px}
+.ck{display:flex;align-items:center;gap:9px;min-height:30px;font-size:13.5px;cursor:pointer;line-height:1.25}
+.ck input{width:20px;height:20px;accent-color:var(--navy);margin:0}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.calc{display:flex;justify-content:space-between;align-items:center;background:var(--sky2);border-radius:9px;padding:8px 12px;margin-top:10px;font-size:13px}
+.calc b{font-size:18px;color:var(--navy)}
+.hide{display:none!important}
+/* resultados */
+.alerts{background:var(--redbg);border:1.5px solid var(--redbd);border-radius:14px;padding:14px;margin-bottom:14px}
+.alerts h2{color:#8C1D18;display:flex;gap:8px;align-items:center}
+.alerts ul{margin:8px 0 0;padding-left:20px;color:#4A2522}
+.alerts li{margin:4px 0}
+.cmp{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+.cmp th,.cmp td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.cmp th{background:var(--sky2);color:var(--navy);font-size:12.5px}
+.cmp td.n{font-variant-numeric:tabular-nums}
+.verdict{margin-top:10px;background:var(--navy);color:#fff;border-radius:10px;padding:10px 12px;font-size:13.5px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:12px}
+.dom-r{grid-column:1/-1;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--mute);margin-top:6px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.card.t-red{border-left:5px solid var(--red)}
+.card-h{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.card-h h3{font-size:15.5px}
+.what{font-size:12px;color:var(--mute)}
+.val{font-size:21px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.pill{align-self:flex-start;font-size:12.5px;font-weight:700;border-radius:7px;padding:4px 9px}
+.p-red{background:var(--red);color:#fff}.p-amber{background:#F6D58E;color:#3D2600}.p-blue{background:var(--okbg);color:var(--ok)}.p-na{background:var(--nabg);color:var(--na)}
+details{font-size:13px;color:#33475E}
+summary{cursor:pointer;font-weight:600;color:var(--navy2);min-height:32px;display:flex;align-items:center}
+details ul{margin:4px 0 0;padding-left:18px}
+.note{font-size:12.5px;background:var(--ambbg);border:1px solid var(--ambbd);color:#4D3300;border-radius:8px;padding:7px 9px}
+.miss{font-size:13px;color:var(--na)}
+.ref{border-top:1px solid #E6ECF2;padding-top:6px;font-size:11.5px;color:var(--mute);margin-top:auto}
+.ref a{word-break:break-all}
+.empty{padding:28px;text-align:center;color:var(--mute);border:1px dashed #A9B8C9;border-radius:14px;background:#fff}
+footer{max-width:1320px;margin:0 auto;padding:0 20px 100px;font-size:12px;color:var(--mute)}
+#fuentes{max-width:1320px;margin:0 auto;padding:14px 20px 90px}
+.refs{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:12px;margin-top:12px}
+.refc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;scroll-margin-top:16px}
+.refc h3{display:flex;gap:8px;align-items:center}
+.refc dl{margin:8px 0 0;display:grid;grid-template-columns:120px 1fr;gap:6px 10px;font-size:13px}
+.refc dt{font-weight:700;color:var(--mute)}
+.refc dd{margin:0}
+.refc:target{outline:3px solid var(--gold)}
+.srclink{font-size:12px;font-weight:600;color:var(--navy2);text-decoration:underline;cursor:pointer;background:none;border:0;padding:0;text-align:left}
+.toplink{color:#fff;font-weight:600;font-size:14px;align-self:center;margin-right:6px}
+.legend{font-size:13px;color:var(--mute)}
+@media (max-width:900px){
+  main{padding:12px 12px 96px}
+  #dataCol{display:block}
+  body[data-view="scores"] #dataPanel,body[data-view="datos"] #selPanel{display:none}
+  #form{columns:1}
+  .rtop{grid-template-columns:1fr}
+  .steps-in{padding:8px 10px;gap:4px}
+  .step{padding:0 10px;font-size:13px;gap:6px}
+  .step-sep{width:8px}
+  .step-fu{padding:0 10px}
+  .ab-in{padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+  #abInfo{font-size:12.5px}
+  .cta{padding:0 14px}
+  .top-in{padding:10px 12px}
+  .brand img{width:42px;height:42px}.brand h1{font-size:19px}
+  .top-actions .btn{min-height:40px;padding:0 12px;font-size:13px}
+  .grid2,.checks{grid-template-columns:1fr 1fr}
+  .cards{grid-template-columns:1fr}
+  .refs{grid-template-columns:1fr}
+  .refc dl{grid-template-columns:1fr}
+  #fuentes{padding:12px 12px 96px}
+  .toplink{font-size:13px;margin:0 0 0 auto;order:3}
+  .brand{min-width:0}
+  .brand p{display:none}
+  .brand img{width:36px!important;height:36px!important}
+  .brand h1{font-size:18px!important}
+  .top-in{padding:8px 12px!important;gap:8px}
+  .top-actions{width:100%;align-items:center}
+  .top-actions .btn{min-height:36px!important;padding:0 12px!important}
+  #form .used{display:none}
+  body[data-view="resultados"] #abInfo{display:none}
+  body[data-view="resultados"] #abNext{display:none}
+  body[data-view="resultados"] #abBack{flex:1}
+}
+
+@media (min-width:901px){
+  .top-in{padding:8px 20px}
+  .brand img{width:40px;height:40px}
+  .brand h1{font-size:19px}
+  .top-actions .btn{min-height:38px}
+  .steps-in{padding:6px 20px}
+  .step{min-height:34px}
+  main,.top-in,.steps-in,.ab-in,#fuentes,footer{max-width:1440px}
+  main{padding-top:12px}
+  #dataCol{grid-template-columns:350px 1fr;gap:14px}
+  .panel{padding:12px 14px}
+  #form .used{display:none}
+  #form .sec{margin-bottom:10px}
+  .sec-h{margin-bottom:4px}
+  .grid2{gap:6px 10px}
+  .f input[type=number],.f select{height:34px;font-size:14px}
+  .ck{min-height:26px;font-size:13px}
+  .calc{margin-top:6px;padding:5px 10px}
+  .calc b{font-size:16px}
+  #selPanel .row{flex-wrap:nowrap}
+  #selPanel .mini{padding:0 10px;font-size:12.5px;min-height:32px}
+  .chip{min-height:30px;padding:2px 10px;font-size:12.5px}
+  .dom{margin-top:8px}
+  .dom-t{margin-bottom:4px}
+  #dataT+.sub{margin-bottom:8px!important}
+}
+
+.lab{display:inline-flex;align-items:center;gap:5px}
+.info{flex:none;display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--navy2);background:#fff;color:var(--navy2);font:italic 700 11px/1 Georgia,serif;cursor:pointer;padding:0;position:relative}
+.info::after{content:"";position:absolute;inset:-10px}
+.info:hover,.info[aria-expanded="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.ckw{display:flex;align-items:center;gap:6px}
+.ckw .ck{flex:1;min-width:0}
+#tip{position:fixed;z-index:30;max-width:300px;background:var(--navy);color:#fff;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+#tip b{color:#fff}
+#tip .tip-u{margin-top:6px;font-size:11.5px;color:#C9D6E8}
+.card-h h3{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.range{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12.5px}
+.range-t{color:var(--mute);font-weight:600;margin-right:2px}
+.range-a{color:var(--mute)}
+.range .pill{padding:2px 8px;font-size:12px}
+.missbox{display:flex;flex-direction:column;gap:8px;background:var(--nabg);border-radius:10px;padding:10px}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.qgrid .f input,.qgrid .f select{height:36px}
+.missbox .mini{align-self:flex-start}
+.soph{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
+.soph caption{text-align:left;font-weight:700;color:var(--navy);font-size:12.5px;padding:4px 0}
+.soph th,.soph td{padding:4px 5px;border-bottom:1px solid var(--line);text-align:right}
+.soph th:first-child,.soph td:first-child{text-align:left}
+.soph th{background:var(--sky2);color:var(--navy);font-size:11.5px}
+.soph-n{font-size:11.5px;color:var(--mute)}
+.soph0 td{color:var(--mute)}
+.brand h1 .ia{color:var(--gold)}
+</style>
+</head>
+<body data-view="scores">
+<header class="top"><div class="top-in">
+  <div class="brand"><img src="data:image/jpeg;base64,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" alt="Logo BarIAscore"><div><h1>Bar<span class="ia">IA</span>score</h1><p>Scores validados para cirugía bariátrica y metabólica</p></div></div>
+  <div class="top-actions"><a class="toplink" href="#fuentes">Fuentes y referencias</a><button class="btn" id="demoBtn" type="button">Caso de ejemplo</button><button class="btn solid" id="clearBtn" type="button">Limpiar</button></div>
+</div></header>
+<nav class="steps" aria-label="Pasos"><div class="steps-in">
+  <button type="button" class="step" data-go="scores"><span class="n">1</span>Scores</button><span class="step-sep" aria-hidden="true"></span>
+  <button type="button" class="step" data-go="datos"><span class="n">2</span>Datos</button><span class="step-sep" aria-hidden="true"></span>
+  <button type="button" class="step" data-go="resultados"><span class="n">3</span>Resultados <span class="badge hide" id="badge"></span></button>
+</div></nav>
+
+<main>
+  <div id="dataCol">
+    <section class="panel" id="selPanel" aria-labelledby="selT">
+      <div class="sel-head"><h2 id="selT">1. Scores a calcular</h2><span class="count" id="selCount"></span></div>
+      <div class="row"><button class="mini fill" type="button" id="allBtn">Seleccionar todos</button><button class="mini" type="button" id="noneBtn">Quitar selección</button></div>
+      <p class="sub" style="margin-top:8px">Toque un score para incluirlo o quitarlo. El formulario pide solo lo que los elegidos necesitan.</p>
+      <div id="chips"></div>
+    </section>
+    <section class="panel" id="dataPanel" aria-labelledby="dataT">
+      <h2 id="dataT">2. Datos del caso</h2>
+      <p class="sub" style="margin-bottom:10px">Complete lo que tenga; cada score indica qué le falta. Luego presione <b>Calcular</b>.</p>
+      <form id="form" onsubmit="return false"></form>
+    </section>
+  </div>
+  <div id="resultsCol">
+    <div id="results" aria-live="polite"></div>
+  </div>
+</main>
+<section id="fuentes" aria-labelledby="fuT">
+  <div class="panel">
+    <h2 id="fuT">Fuentes y referencias</h2>
+    <p class="legend">De dónde sale cada score: la población en que se derivó, qué predice, de qué tabla o figura del artículo original se tomó la fórmula y la cita completa con DOI. Nivel de evidencia: <b>A</b> validación externa o registro de más de 100.000 pacientes · <b>B</b> validación interna o externa pequeña · <b>C</b> regla basada en factores de riesgo, sin validar.</p>
+  </div>
+  <div class="refs" id="refList"></div>
+  <div class="panel" style="margin-top:12px">
+    <h3>Referencias complementarias</h3>
+    <ul class="legend" style="margin:8px 0 0;padding-left:18px">
+      <li>Dallal RM, et al. Dynamic reassessment of pulmonary embolism risk after metabolic-bariatric surgery. J Am Coll Surg 2026;243:1166-74. <a href="https://doi.org/10.1097/XCS.0000000000002052" target="_blank" rel="noopener">doi:10.1097/XCS.0000000000002052</a> — límites de las calculadoras de TEV al alta.</li>
+      <li>Baldane S, et al. J Minim Access Surg 2024. <a href="https://doi.org/10.4103/jmas.jmas_321_23" target="_blank" rel="noopener">doi:10.4103/jmas.jmas_321_23</a> — tabla de puntos de DiaRem2; comparación de IMS, Ad-DiaRem, DiaBetter y ABCD.</li>
+      <li>Filardi K, et al. Obes Surg 2026. <a href="https://doi.org/10.1007/s11695-026-08997-4" target="_blank" rel="noopener">doi:10.1007/s11695-026-08997-4</a> — lista de ítems del Bariatric Frailty Score.</li>
+      <li>Karpińska IA, et al. External validation of predictive scores for diabetes remission after metabolic surgery. Obes Surg 2022 (PMC8847237).</li>
+    </ul>
+    <p class="legend" style="margin-top:10px">BarIAscore implementa métodos publicados. No reproduce el software, la interfaz ni las marcas de las calculadoras web de los autores ni de ninguna otra organización, y no afirma estar respaldado por ellos.</p>
+  </div>
+</section>
+<footer>
+  <p><b>Apoyo a la decisión clínica.</b> Cada resultado proviene de la fórmula publicada que se cita en su tarjeta, calculada de forma determinística en este dispositivo. No reemplaza el juicio del cirujano; fuera de la población de derivación el resultado es orientativo.</p>
+  <p>BarIAscore implementa métodos publicados en revistas revisadas por pares. No reproduce software, interfaces ni marcas de terceros. Versión de motor 1.0 · 17 scores · 54 pruebas automáticas.</p>
+</footer>
+<div class="actionbar"><div class="ab-in"><span id="abInfo" aria-live="polite"></span><button type="button" class="cta ghost" id="abBack"></button><button type="button" class="cta" id="abNext"></button></div></div>
+
+<script>
+/* BarIAscore — motor de cálculo determinístico.
+   Cada score: fórmula publicada, sin IA. Fuente y DOI en cada módulo. */
+(function (root) {
+  'use strict';
+
+  var PROC_LABEL = { SG: 'Manga', RYGB: 'Bypass (RYGB)', OAGB: 'Bypass de una anastomosis', BAND: 'Banda', DS: 'Switch duodenal' };
+
+  function num(v) { return v === undefined || v === null || v === '' || isNaN(Number(v)) ? undefined : Number(v); }
+  function has(v) { return v !== undefined && v !== null && v !== ''; }
+  function bmiOf(c) {
+    var w = num(c.weight), h = num(c.height);
+    if (w === undefined || h === undefined || h <= 0) return undefined;
+    return w / Math.pow(h / 100, 2);
+  }
+  function logistic(L) { return Math.exp(L) / (1 + Math.exp(L)); }
+  function pct(p, d) { return (p * 100).toFixed(d === undefined ? 2 : d).replace('.', ',') + '%'; }
+  function fmt(x, d) { return Number(x).toFixed(d === undefined ? 1 : d).replace('.', ','); }
+  function procsOf(c) {
+    var p = c.procedure || 'COMPARE';
+    return p === 'COMPARE' ? ['SG', 'RYGB'] : [p];
+  }
+  function missingKeys(c, keys) {
+    var out = [];
+    keys.forEach(function (k) {
+      if (k === 'bmi') { if (!has(c.weight)) out.push('weight'); if (!has(c.height)) out.push('height'); }
+      else if (!has(c[k])) out.push(k);
+    });
+    return out.filter(function (k, i) { return out.indexOf(k) === i; });
+  }
+  function keysFromLabels(labels) {
+    var inv = {}; Object.keys(FIELD_LABEL).forEach(function (k) { inv[FIELD_LABEL[k]] = k; });
+    return labels.map(function (l) { return inv[l]; }).filter(Boolean);
+  }
+  function missing(c, keys) {
+    var out = [];
+    keys.forEach(function (k) {
+      if (k === 'bmi') { if (bmiOf(c) === undefined) out.push('peso y talla'); }
+      else if (!has(c[k])) out.push(FIELD_LABEL[k] || k);
+    });
+    return out;
+  }
+  var FIELD_LABEL = {
+    age: 'edad', sex: 'sexo', htn: 'HTA', priorVTE: 'TEV previo', dm: 'diabetes', dmYears: 'años de DM2',
+    hba1c: 'HbA1c', insulin: 'insulina', nMeds: 'n.º de antidiabéticos', otherAgent: 'antidiabético no metformina',
+    cpeptide: 'péptido C', eoss: 'estadio EOSS', opTime: 'tiempo operatorio', los: 'estadía', functional: 'estado funcional',
+    gerdq: 'GerdQ', la: 'esofagitis (LA)', hill: 'Hill', afs: 'grado AFS', smoker: 'tabaquismo', height: 'talla',
+    weeklyReflux: 'síntomas de reflujo semanales', hisDistanceGt1: 'distancia al His', fullHisMobilization: 'movilización del His',
+    ppiGt12: 'IBP > 12 semanas', glucoseStatus: 'tolerancia a la glucosa'
+  };
+
+  /* ---------- 1. OS-MRS ---------- */
+  var osmrs = {
+    id: 'osmrs', name: 'OS-MRS', domain: 'Riesgo global y mortalidad', level: 'A',
+    what: 'Mortalidad a 90 días tras bypass',
+    cite: 'DeMaria EJ, et al. Ann Surg 2007;246(4):578-82', doi: '10.1097/SLA.0b013e318157206e',
+    needs: ['age', 'sex', 'bmi', 'htn'],
+    compute: function (c) {
+      var bmi = bmiOf(c), lines = [], pts = 0;
+      var peRisk = !!(c.priorVTE || c.ivcFilter || c.pulmHTN);
+      [[bmi >= 50, 'IMC ≥ 50'], [c.sex === 'M', 'Sexo masculino'], [!!c.htn, 'HTA'],
+       [peRisk, 'Riesgo de TEP (TEV previo, filtro de cava, HTP o hipoventilación)'], [num(c.age) >= 45, 'Edad ≥ 45']]
+        .forEach(function (r) { if (r[0]) pts++; lines.push((r[0] ? '+1 ' : '0 ') + r[1]); });
+      var cls = pts <= 1 ? 'A' : pts <= 3 ? 'B' : 'C';
+      var mort = { A: '0,2%', B: '1,1%', C: '2,4%' }[cls];
+      return { value: pts + ' / 5', stratum: 'Clase ' + cls + ' · mortalidad esperada ' + mort,
+        tone: cls === 'C' ? 'red' : cls === 'B' ? 'amber' : 'blue', score: pts, cls: cls, lines: lines,
+        note: 'El ' + mort + ' es la mortalidad a 90 días observada en los pacientes clase ' + cls + ' del estudio multicéntrico de validación (4.431 bypass): clase A 0,2%, B 1,1%, C 2,4%. Es el riesgo promedio del grupo, no un cálculo individual.',
+        alert: cls === 'C' ? 'OS-MRS clase C: mortalidad esperada a 90 días 2,4%.' : null };
+    }
+  };
+
+  /* ---------- 2. EOSS ---------- */
+  var eoss = {
+    id: 'eoss', name: 'EOSS', domain: 'Riesgo global y mortalidad', level: 'A',
+    what: 'Estadio clínico de la obesidad (0–4)',
+    cite: 'Sharma AM, Kushner RF. Int J Obes 2009;33:289-95', doi: '10.1038/ijo.2009.2',
+    needs: ['eoss'],
+    compute: function (c) {
+      var s = num(c.eoss);
+      var desc = ['Sin factores de riesgo ni limitaciones', 'Factores de riesgo subclínicos o síntomas leves',
+        'Enfermedad crónica establecida que requiere tratamiento', 'Daño de órgano blanco o limitación significativa',
+        'Discapacidad grave, potencialmente terminal'][s];
+      return { value: 'Estadio ' + s, stratum: desc, tone: s >= 4 ? 'red' : s >= 2 ? 'amber' : 'blue', score: s,
+        lines: ['MBSAQIP (Skulsky 2021): EOSS 4 OR 2,30 para complicación mayor a 30 días; EOSS 3–4 asociados a muerte.'],
+        alert: s >= 4 ? 'EOSS 4: mayor riesgo de complicación mayor y muerte.' : null };
+    }
+  };
+
+  /* ---------- 3. Bari-MACE ---------- */
+  var barimace = {
+    id: 'barimace', name: 'Bari-MACE', domain: 'Riesgo global y mortalidad', level: 'B',
+    what: 'Evento cardiaco mayor a 30 días',
+    cite: 'Mocanu V, et al. Surg Obes Relat Dis 2022;18(3):357-64', doi: '10.1016/j.soard.2021.12.008',
+    needs: ['age', 'sex', 'bmi', 'opTime', 'htn'],
+    compute: function (c) {
+      var bmi = bmiOf(c), lines = [], s = 0;
+      function add(cond, p, label) { if (cond) { s += p; lines.push('+' + fmt(p, p % 1 ? 1 : 0) + ' ' + label); } }
+      add(!!c.anticoag, 10, 'Anticoagulación terapéutica');
+      add(num(c.asa) >= 4, 7, 'ASA IV–V');
+      add(!!c.renal, 6, 'Insuficiencia renal');
+      add(!!c.priorVTE, 6, 'TEV previo');
+      add(!!c.priorMI, 6, 'IAM previo');
+      add(!!(c.priorPCI || c.priorCardiacSurgery), 6, 'Intervención cardiaca previa');
+      add(!!c.htn, 6, 'HTA');
+      add(!!(c.dm && c.insulin), 5, 'DM insulinorequiriente');
+      var b = 2 * bmi / 10, o = 2 * num(c.opTime), a = 0.4 * num(c.age);
+      s += b + o + a; lines.push('+' + fmt(b) + ' IMC (2 × IMC/10)', '+' + fmt(o) + ' tiempo operatorio (2 × horas)', '+' + fmt(a) + ' edad (0,4 × años)');
+      if (c.sex === 'F') { s -= 3; lines.push('−3 sexo femenino'); }
+      var high = s >= 55;
+      return { value: fmt(s), stratum: high ? 'Alto riesgo (≥ 55)' : 'Bajo el umbral de 55', tone: high ? 'red' : 'blue', score: s, lines: lines,
+        note: 'Umbral 55: especificidad 97,8%, sensibilidad 13,5%. Un valor bajo no descarta riesgo.',
+        alert: high ? 'Bari-MACE ≥ 55: alto riesgo de evento cardiaco mayor.' : null };
+    }
+  };
+
+  /* ---------- 4. Finks / MBSC ---------- */
+  var FINKS_PROC = { DS: 2.25, OPEN: 1.87, RYGB: 1.38, OAGB: 1.38, SG: 1.25, BAND: 0 };
+  function finksOne(c, proc) {
+    var bmi = bmiOf(c), age = num(c.age);
+    var bmiCat = bmi < 40 ? 1 : bmi < 50 ? 2 : bmi < 60 ? 3 : 4;
+    var ageCat = age < 30 ? 1 : age < 40 ? 2 : age < 50 ? 3 : age < 60 ? 4 : 5;
+    var L = -8.90 + FINKS_PROC[proc] + 1.42 * (c.priorVTE ? 1 : 0) + 0.733 * (c.sex === 'M' ? 1 : 0)
+      + 0.622 * (num(c.opTime) > 3 ? 1 : 0) + 0.311 * bmiCat + 0.223 * ageCat;
+    var odds = Math.exp(L);
+    return { p: odds / (1 + odds), L: L, bmiCat: bmiCat, ageCat: ageCat };
+  }
+  var finks = {
+    id: 'finks', name: 'Finks / MBSC', domain: 'Tromboembolismo', level: 'A',
+    what: 'TEV a 30 días',
+    cite: 'Finks JF, et al. Ann Surg 2012;255(6):1100-4', doi: '10.1097/SLA.0b013e31825659d4',
+    needs: ['age', 'sex', 'bmi', 'opTime'],
+    perProcedure: true,
+    compute: function (c) {
+      var res = {}, lines = [], maxp = 0;
+      procsOf(c).forEach(function (pr) {
+        var r = finksOne(c, pr); res[pr] = r; maxp = Math.max(maxp, r.p);
+        lines.push(PROC_LABEL[pr] + ': ' + pct(r.p) + ' (logit ' + fmt(r.L, 3) + ')');
+      });
+      var any = Object.keys(res)[0];
+      lines.push('Categorías: IMC ' + res[any].bmiCat + ', edad ' + res[any].ageCat + '. Intercepto −8,90.');
+      if ((c.procedure || '') === 'OAGB') lines.push('El modelo no incluye OAGB: se usó el coeficiente del bypass laparoscópico.');
+      return { value: Object.keys(res).map(function (k) { return pct(res[k].p); }).join(' · '),
+        stratum: Object.keys(res).map(function (k) { return PROC_LABEL[k]; }).join(' · '),
+        tone: maxp >= 0.01 ? 'amber' : 'blue', byProc: res, lines: lines,
+        note: 'En la derivación, el 97% de los pacientes tenía riesgo < 1%.' };
+    }
+  };
+
+  /* ---------- 5. Aminian post-alta ---------- */
+  function aminianOne(c, proc) {
+    var bmi = bmiOf(c);
+    var L = -7.337 + 1.883 * (c.chf ? 1 : 0) + 1.743 * (c.paraplegia ? 1 : 0) + 1.631 * (c.reoperation ? 1 : 0)
+      + 1.375 * (c.dyspnea ? 1 : 0) + 0.893 * (proc !== 'BAND' ? 1 : 0) + 0.67 * (num(c.age) >= 60 ? 1 : 0)
+      + 0.655 * (c.sex === 'M' ? 1 : 0) + 0.516 * (bmi >= 50 ? 1 : 0) + 0.455 * (num(c.los) >= 3 ? 1 : 0)
+      + 0.451 * (num(c.opTime) >= 3 ? 1 : 0);
+    return { p: logistic(L), L: L };
+  }
+  var aminian = {
+    id: 'aminian', name: 'TEV post-alta (Aminian)', domain: 'Tromboembolismo', level: 'A',
+    what: 'TEV entre el alta y el día 30',
+    cite: 'Aminian A, et al. Ann Surg 2017;265(1):143-50', doi: '10.1097/SLA.0000000000001686',
+    needs: ['age', 'sex', 'bmi', 'opTime', 'los'],
+    perProcedure: true,
+    compute: function (c) {
+      var res = {}, lines = [], maxp = 0;
+      procsOf(c).forEach(function (pr) { var r = aminianOne(c, pr); res[pr] = r; maxp = Math.max(maxp, r.p);
+        lines.push(PROC_LABEL[pr] + ': ' + pct(r.p) + ' (L = ' + fmt(r.L, 3) + ')'); });
+      var high = maxp > 0.004;
+      return { value: Object.keys(res).map(function (k) { return pct(res[k].p); }).join(' · '),
+        stratum: high ? 'Sobre 0,4% · considerar profilaxis extendida' : 'Bajo 0,4%', tone: high ? 'red' : 'blue', byProc: res, lines: lines,
+        note: 'Corte > 0,4%: sensibilidad 53%, especificidad 80%. Dallal 2026: las calculadoras al alta captan < 10% de los TEP post-alta; reevaluar si el paciente consulta o se complica.',
+        alert: high ? 'TEV post-alta ' + pct(maxp) + ' (> 0,4%): considerar profilaxis extendida.' : null };
+    }
+  };
+
+  /* ---------- 6. BariClot ---------- */
+  var bariclot = {
+    id: 'bariclot', name: 'BariClot', domain: 'Tromboembolismo', level: 'A',
+    what: 'TEV a 30 días',
+    cite: 'Dang JT, et al. Surg Endosc 2019;33(3):821-31', doi: '10.1007/s00464-018-6348-0',
+    needs: ['opTime', 'functional'],
+    compute: function (c) {
+      var f = { indep: 0, partial: 1, total: 2 }[c.functional] || 0;
+      var s = 9 * (c.priorVTE ? 1 : 0) + num(c.opTime) + f;
+      var cat = s < 1 ? ['Bajo', '< 0,3%', 'blue'] : s < 7 ? ['Medio', '0,3–1%', 'amber'] : s < 10 ? ['Alto', '1–2%', 'red'] : ['Muy alto', '> 2%', 'red'];
+      return { value: fmt(s), stratum: cat[0] + ' · ' + cat[1], tone: cat[2], score: s,
+        lines: ['9 × TEV previo = ' + (c.priorVTE ? 9 : 0), 'Horas de cirugía = ' + fmt(num(c.opTime)), 'Estado funcional = ' + f, 'Raza negra = 0 (variable no transportable a Chile)'],
+        note: 'AUROC 0,59 en validación: discriminación baja.',
+        alert: s >= 7 ? 'BariClot ' + cat[0].toLowerCase() + ' (' + cat[1] + ').' : null };
+    }
+  };
+
+  /* ---------- Diabetes ---------- */
+  function dmGate(c) { return c.dm ? null : 'Solo aplica a pacientes con diabetes tipo 2.'; }
+
+  var diarem = {
+    id: 'diarem', name: 'DiaRem', domain: 'Diabetes tipo 2', level: 'A',
+    what: 'Remisión de DM2 tras bypass',
+    cite: 'Still CD, et al. Lancet Diabetes Endocrinol 2014;2(1):38-45', doi: '10.1016/S2213-8587(13)70070-6',
+    needs: ['age', 'hba1c', 'insulin', 'otherAgent'], gate: dmGate,
+    compute: function (c) {
+      var age = num(c.age), a1c = num(c.hba1c);
+      var pa = age < 40 ? 0 : age < 50 ? 1 : age < 60 ? 2 : 3;
+      var ph = a1c < 6.5 ? 0 : a1c < 7 ? 2 : a1c < 9 ? 4 : 6;
+      var po = c.otherAgent ? 3 : 0, pi = c.insulin ? 10 : 0, s = pa + ph + po + pi;
+      var g = s <= 2 ? ['0–2', '88%', 'blue'] : s <= 7 ? ['3–7', '64%', 'blue'] : s <= 12 ? ['8–12', '23%', 'amber'] : s <= 17 ? ['13–17', '11%', 'amber'] : ['18–22', '2%', 'amber'];
+      return { value: s + ' / 22', stratum: 'Remisión temprana ' + g[1] + ' (grupo ' + g[0] + ')', tone: g[2], score: s,
+        lines: ['Edad: ' + pa, 'HbA1c: ' + ph, 'Antidiabético distinto de metformina: ' + po, 'Insulina: ' + pi] };
+    }
+  };
+
+  var diarem2 = {
+    id: 'diarem2', name: 'DiaRem2', domain: 'Diabetes tipo 2', level: 'B',
+    what: 'Remisión de DM2 tras bypass (incluye duración)',
+    cite: 'Still CD, et al. Surg Obes Relat Dis 2019;15(5):717-24 (tabla de Baldane 2024)', doi: '10.1016/j.soard.2018.12.020',
+    needs: ['age', 'hba1c', 'insulin', 'dmYears'], gate: dmGate,
+    compute: function (c) {
+      var age = num(c.age), a1c = num(c.hba1c), d = num(c.dmYears);
+      var col = d <= 5 ? 0 : d < 10 ? 1 : 2;
+      var pa = age < 40 ? 0 : age < 50 ? 1 : age < 60 ? [2, 2, 10][col] : [4, 4, 10][col];
+      var ph = a1c < 6.5 ? 0 : a1c < 7 ? [2, 5, 5][col] : a1c < 9 ? [2, 10, 10][col] : 10;
+      var pi = c.insulin ? 5 : 0, s = pa + ph + pi;
+      var g = s <= 5 ? ['Remisión alta', '~94% al año', 'blue'] : s <= 12 ? ['Remisión intermedia', '~65% al año', 'amber'] : ['Remisión baja', '~15% al año', 'amber'];
+      return { value: s + ' / 25', stratum: g[0] + ' · ' + g[1], tone: g[2], score: s,
+        lines: ['Edad (columna ' + ['≤ 5', '6–9', '≥ 10'][col] + ' años de DM2): ' + pa, 'HbA1c: ' + ph, 'Insulina: ' + pi] };
+    }
+  };
+
+  var addiarem = {
+    id: 'addiarem', name: 'Ad-DiaRem', domain: 'Diabetes tipo 2', level: 'A',
+    what: 'Remisión de DM2 al año tras bypass',
+    cite: 'Aron-Wisnewsky J, et al. Diabetologia 2017;60(10):1892-902', doi: '10.1007/s00125-017-4371-7',
+    needs: ['age', 'hba1c', 'insulin', 'otherAgent', 'nMeds', 'dmYears'], gate: dmGate,
+    compute: function (c) {
+      var age = num(c.age), a1c = num(c.hba1c), n = num(c.nMeds), d = num(c.dmYears);
+      var pa = age < 42 ? 0 : age < 53 ? 3 : 5;
+      var ph = a1c < 7 ? 0 : a1c < 7.5 ? 2 : 4;
+      var pi = c.insulin ? 3 : 0, po = c.otherAgent ? 1 : 0, pn = Math.min(n, 3), pd = d < 7 ? 0 : d < 14 ? 3 : 5;
+      var s = pa + ph + pi + po + pn + pd;
+      var lines = ['Edad: ' + pa, 'HbA1c: ' + ph, 'Insulina: ' + pi, 'Sulfonilurea o sensibilizador no metformina: ' + po, 'N.º de antidiabéticos: ' + pn, 'Duración de DM2: ' + pd];
+      if (age > 69) lines.push('Edad fuera del rango de derivación (15–69).');
+      return { value: s + ' / 21', stratum: s < 10 ? '< 10 · remisión probable (~80%)' : '≥ 10 · menor probabilidad de remisión', tone: s < 10 ? 'blue' : 'amber', score: s, lines: lines };
+    }
+  };
+
+  var IMS_DUR = [[0, 0], [1, 5.6], [2, 11.2], [3, 16.8], [4, 22.4], [5, 28], [6, 32], [7, 36], [8, 40], [9, 44], [10, 48], [11, 50], [12, 52], [13, 54], [14, 56], [15, 58], [16, 59.68], [40, 100]];
+  function imsDuration(y) {
+    if (y <= 0) return 0; if (y >= 40) return 100;
+    for (var i = 1; i < IMS_DUR.length; i++) {
+      var a = IMS_DUR[i - 1], b = IMS_DUR[i];
+      if (y <= b[0]) return a[1] + (b[1] - a[1]) * (y - a[0]) / (b[0] - a[0]);
+    }
+    return 100;
+  }
+  var ims = {
+    id: 'ims', name: 'IMS', domain: 'Diabetes tipo 2', level: 'A',
+    what: 'Severidad de DM2 y elección de técnica (manga vs bypass)',
+    cite: 'Aminian A, et al. Ann Surg 2017;266(4):650-7', doi: '10.1097/SLA.0000000000002407',
+    needs: ['hba1c', 'insulin', 'nMeds', 'dmYears'], gate: dmGate,
+    compute: function (c) {
+      var pm = 12.6 * Math.min(num(c.nMeds), 5), pi = c.insulin ? 18 : 0, pg = num(c.hba1c) >= 7 ? 16 : 0, pd = imsDuration(num(c.dmYears));
+      var s = pm + pi + pg + pd;
+      var st = s <= 25 ? ['Leve', 'Bypass sugerido; ambos procedimientos muy eficaces (remisión 92% RYGB vs 74% manga)', 'blue']
+        : s <= 95 ? ['Moderada', 'Bypass recomendado; manga menos eficaz (remisión 60% RYGB vs 25% manga)', 'blue']
+        : ['Severa', 'Manga sugerida; ambos menos eficaces (remisión 12% con ambos)', 'amber'];
+      return { value: fmt(s), stratum: st[0] + ' · ' + st[1], tone: st[2], score: s, stage: st[0],
+        lines: ['N.º de antidiabéticos: ' + fmt(pm), 'Insulina: ' + pi, 'HbA1c ≥ 7%: ' + pg, 'Duración de DM2: ' + fmt(pd)] };
+    }
+  };
+
+  var abcd = {
+    id: 'abcd', name: 'ABCD', domain: 'Diabetes tipo 2', level: 'B',
+    what: 'Remisión de DM2 (mayor puntaje = más remisión)',
+    cite: 'Lee WJ, et al. Surg Obes Relat Dis 2013;9(3):379-84', doi: '10.1016/j.soard.2012.07.015',
+    needs: ['age', 'bmi', 'cpeptide', 'dmYears'], gate: dmGate,
+    compute: function (c) {
+      var bmi = bmiOf(c), cp = num(c.cpeptide), d = num(c.dmYears);
+      var pa = num(c.age) < 40 ? 1 : 0;
+      var pb = bmi < 30 ? 0 : bmi < 40 ? 1 : bmi < 50 ? 2 : 3;
+      var pc = cp < 2 ? 0 : cp < 4 ? 1 : cp <= 6 ? 2 : 3;
+      var pd = d > 10 ? 0 : d >= 5 ? 1 : d >= 2 ? 2 : 3;
+      var s = pa + pb + pc + pd;
+      var rem = ['33%', '33%', '43%', '46%', '41%', '57%', '83%', '87%', '100%', '100%', '100%'][s];
+      var lines = ['Edad: ' + pa, 'IMC: ' + pb, 'Péptido C: ' + pc, 'Duración de DM2: ' + pd];
+      if (cp < 0.9) lines.push('Péptido C < 0,9 ng/mL: excluido en la derivación (sospecha de DM1).');
+      return { value: s + ' / 10', stratum: 'Remisión al año ' + rem + ' en la validación', tone: s >= 5 ? 'blue' : 'amber', score: s, lines: lines };
+    }
+  };
+
+  var diabetter = {
+    id: 'diabetter', name: 'DiaBetter', domain: 'Diabetes tipo 2', level: 'A',
+    what: 'Remisión de DM2 a 2 años (bypass y manga)',
+    cite: 'Pucci A, et al. Diabet Med 2018;35(3):360-7', doi: '10.1111/dme.13532',
+    needs: ['hba1c', 'dmYears', 'insulin', 'otherAgent', 'nMeds'], gate: dmGate,
+    compute: function (c) {
+      var a1c = num(c.hba1c), d = num(c.dmYears), n = num(c.nMeds);
+      var ph = a1c <= 6.5 ? 0 : a1c <= 7.2 ? 1 : a1c <= 8.4 ? 2 : 3;
+      var pd = d <= 2 ? 0 : d <= 5 ? 1 : d <= 10 ? 2 : 3;
+      var other = has(c.otherNonInsulin) ? c.otherNonInsulin : c.otherAgent;
+      var pt = c.insulin ? 3 : other ? 2 : n > 0 ? 1 : 0;
+      var s = ph + pd + pt;
+      var g = s <= 1 ? ['0–1', '98%'] : s <= 3 ? ['2–3', '88%'] : s <= 5 ? ['4–5', '63%'] : s <= 7 ? ['6–7', '39%'] : ['8–9', '19%'];
+      return { value: s + ' / 9', stratum: 'Remisión a 2 años ' + g[1] + ' (grupo ' + g[0] + ')', tone: s <= 3 ? 'blue' : 'amber', score: s,
+        lines: ['HbA1c: ' + ph, 'Duración de DM2: ' + pd, 'Tratamiento (0 ninguno · 1 metformina · 2 otro no insulínico · 3 insulina): ' + pt] };
+    }
+  };
+
+  /* ---------- 13. SOPHIA ---------- */
+  function sophiaTWL(c, proc, month) {
+    var age = num(c.age), t2d = !!c.dm, d = num(c.dmYears) || 0, h = num(c.height), igt = c.glucoseStatus === 'IGT';
+    if (proc === 'OAGB' || proc === 'DS') return null;
+    if (month === 12) {
+      if (proc === 'BAND') return 0.13;
+      if (age > 51) return proc === 'SG' ? 0.22 : 0.28;
+      if (c.smoker) return 0.36;
+      if (proc === 'SG') return 0.29;
+      return 0.30;
+    }
+    if (month === 24) {
+      if (proc === 'BAND') return 0.16;
+      if (proc === 'SG') return age > 51 ? 0.19 : 0.29;
+      if (t2d) return d > 2.5 ? 0.27 : 0.33;
+      return age > 49 ? 0.32 : 0.38;
+    }
+    if (month === 60) {
+      if (proc === 'BAND' || proc === 'SG') {
+        if (age <= 35) return 0.24;
+        if (!t2d && !igt) return 0.23;
+        return h > 161 ? 0.16 : 0.22;
+      }
+      if (t2d) return d > 2.5 ? 0.24 : 0.30;
+      return age > 49 ? 0.27 : 0.33;
+    }
+  }
+  var sophia = {
+    id: 'sophia', name: 'SOPHIA', domain: 'Pérdida de peso esperada', level: 'A',
+    what: '%PTP e IMC esperados a 1, 2 y 5 años',
+    cite: 'Saux P, et al. Lancet Digit Health 2023;5(10):e692-702 (árboles del apéndice)', doi: '10.1016/S2589-7500(23)00135-8',
+    needs: ['age', 'bmi', 'height', 'smoker'],
+    perProcedure: true,
+    compute: function (c) {
+      var bmi = bmiOf(c), res = {}, lines = [];
+      if (c.dm && !has(c.dmYears)) return { missing: ['años de DM2'] };
+      procsOf(c).forEach(function (pr) {
+        var t = [12, 24, 60].map(function (m) { return sophiaTWL(c, pr, m); });
+        if (t[0] === null) { lines.push(PROC_LABEL[pr] + ': el modelo no incluye esta técnica.'); return; }
+        var w0 = num(c.weight);
+        res[pr] = { twl: t, bmi: t.map(function (x) { return bmi * (1 - x); }), kgLost: t.map(function (x) { return w0 * x; }), weight: t.map(function (x) { return w0 * (1 - x); }) };
+        lines.push(PROC_LABEL[pr] + ': %PTP ' + t.map(function (x) { return Math.round(x * 100) + '%'; }).join(' / ') +
+          ' → IMC ' + res[pr].bmi.map(function (x) { return fmt(x); }).join(' / ') + ' (1 / 2 / 5 años)');
+      });
+      var keys = Object.keys(res);
+      if (!keys.length) return { na: 'SOPHIA solo modela banda, manga y bypass en Y de Roux.' };
+      return { value: keys.map(function (k) { return 'IMC ' + fmt(res[k].bmi[2]); }).join(' · '),
+        stratum: 'A 5 años: ' + keys.map(function (k) { return PROC_LABEL[k] + ' ' + Math.round(res[k].twl[2] * 100) + '% PTP'; }).join(' · '),
+        tone: 'blue', byProc: res, lines: lines,
+        note: 'Precisión: en la validación, la mitad de los pacientes quedó a menos de 2,8 kg/m² de su IMC real a 5 años (margen de ± 2,8).' };
+    }
+  };
+
+  /* ---------- 14. Gao ERGE post-manga ---------- */
+  function preexistingGERD(c) {
+    return (num(c.gerdq) >= 8) || (c.la && c.la !== 'none' && c.la !== 'A') || num(c.aet) > 6;
+  }
+  var gao = {
+    id: 'gao', name: 'Score ERGE post-manga (Gao)', domain: 'Reflujo post-manga', level: 'B',
+    what: 'ERGE de novo al año de la manga',
+    cite: 'Gao X, et al. Int J Surg 2025;111(12):9421-30', doi: '10.1097/JS9.0000000000003245',
+    needs: ['bmi', 'afs', 'weeklyReflux', 'hisDistanceGt1', 'fullHisMobilization', 'ppiGt12'],
+    gate: function (c) {
+      if (procsOf(c).indexOf('SG') < 0) return 'Solo aplica si se considera manga.';
+      if (preexistingGERD(c)) return 'No aplica: el paciente ya tiene ERGE (el modelo predice ERGE de novo). Usar el checklist.';
+      return null;
+    },
+    compute: function (c) {
+      var bmi = bmiOf(c), lines = [], s = 0;
+      function add(cond, p, label) { if (cond) s += p; lines.push((cond ? (p > 0 ? '+' : '') + p : '0') + ' ' + label); }
+      add(bmi > 35, 1, 'IMC > 35');
+      add(c.afs === 'II' || c.afs === 'III', 8, 'Grado AFS II');
+      add(!!c.weeklyReflux, 4, 'Síntomas tipo reflujo (≥ 1/semana, GerdQ < 8)');
+      add(!!c.hisDistanceGt1, -4, 'Línea de grapas > 1 cm del ángulo de His');
+      add(!!c.fullHisMobilization, 1, 'Movilización completa del ángulo de His');
+      add(!!c.ppiGt12, -1, 'IBP postoperatorio > 12 semanas');
+      if (c.afs === 'III') lines.push('AFS III no estaba en la cohorte de derivación; se puntuó como II.');
+      function catOf(x) { return x <= 1 ? ['Bajo', 'blue'] : x <= 4 ? ['Medio', 'amber'] : ['Alto', 'red']; }
+      var cat = catOf(s);
+      var pre = (bmi > 35 ? 1 : 0) + ((c.afs === 'II' || c.afs === 'III') ? 8 : 0) + (c.weeklyReflux ? 4 : 0);
+      var best = pre - 5, worst = pre + 1;
+      lines.push('Rango según la técnica: ' + best + ' (' + catOf(best)[0].toLowerCase() + ': grapas a > 1 cm del His, sin movilización completa, IBP > 12 semanas) a ' +
+        worst + ' (' + catOf(worst)[0].toLowerCase() + ': grapas a < 1 cm del His, movilización completa, IBP ≤ 12 semanas).');
+      return { value: String(s), stratum: 'Riesgo ' + cat[0].toLowerCase(), tone: cat[1], score: s, lines: lines,
+        range: { pre: pre, best: best, worst: worst, bestCat: catOf(best), worstCat: catOf(worst) },
+        info: 'El score suma datos del paciente (IMC > 35: +1; AFS II: +8; síntomas de reflujo semanales: +4) y datos de la técnica (grapas a > 1 cm del His: −4; movilización completa del His: +1; IBP > 12 semanas: −1). Las casillas de la técnica que no marque cuentan como "no". El valor grande usa lo que marcó; la barra muestra el mejor y el peor escenario posibles según cómo se haga la manga, para decidir la técnica antes de operar. Riesgo bajo ≤ 1, medio 2 a 4, alto > 4.',
+        note: 'Sin validación externa (AUC 0,912 en validación interna). Se usa por ser el mejor modelo disponible.',
+        alert: cat[0] === 'Alto' ? 'Score de Gao alto: riesgo de ERGE de novo tras manga.' : null };
+    }
+  };
+
+  /* ---------- 15. Checklist ERGE ---------- */
+  var gerdchk = {
+    id: 'gerdchk', name: 'Checklist ERGE post-manga', domain: 'Reflujo post-manga', level: 'C',
+    what: 'Factores preoperatorios con evidencia (regla BarIAscore)',
+    cite: 'Liu 2025; Semeya 2026; Chinn 2025; Loayza 2026', doi: '10.1007/s11695-025-08223-7',
+    needs: ['gerdq', 'la', 'hill', 'afs'],
+    compute: function (c) {
+      var items = [
+        [num(c.gerdq) >= 8, 'GerdQ ≥ 8'],
+        [c.la && c.la !== 'none', 'Esofagitis LA ≥ A'],
+        [num(c.hill) >= 3, 'Hill III–IV'],
+        [!!c.hiatalHernia || c.afs === 'II' || c.afs === 'III', 'Hernia hiatal o AFS ≥ II'],
+        [!has(c.aet) && !has(c.demeester) ? true : (num(c.aet) >= 10.35 || num(c.demeester) >= 30), has(c.aet) || has(c.demeester) ? 'pHmetría con AET ≥ 10,35% o DeMeester ≥ 30' : 'pHmetría no realizada']
+      ];
+      var s = items.filter(function (i) { return i[0]; }).length;
+      var cat = s === 0 ? ['Bajo', 'blue'] : s <= 2 ? ['Intermedio', 'amber'] : ['Alto', 'red'];
+      return { value: s + ' / 5', stratum: 'Riesgo ' + cat[0].toLowerCase() + (s >= 3 ? ' · considerar bypass' : ''), tone: cat[1], score: s,
+        lines: items.map(function (i) { return (i[0] ? '✓ ' : '· ') + i[1]; }),
+        note: 'Regla propia de BarIAscore (nivel C), sin validación.',
+        alert: s >= 3 && procsOf(c).indexOf('SG') >= 0 ? 'ERGE post-manga: ' + s + ' de 5 factores. Considerar bypass.' : null };
+    }
+  };
+
+  /* ---------- 16–17. BFS / mBFS (Sebastian) ---------- */
+  function bfsItems(c) {
+    var bmi = bmiOf(c);
+    return [[bmi > 50, 'IMC > 50'], [!!c.copd, 'EPOC'], [!!(c.dvtStasis || c.priorVTE), 'TVP previa o estasis venosa'], [!!c.dm, 'Diabetes'],
+      [!!c.htn, 'HTA con medicación'], [!!c.priorMI, 'IAM previo'], [!!c.osa, 'SAHOS'], [c.functional === 'partial' || c.functional === 'total', 'Dependencia funcional'],
+      [!!c.priorPCI, 'PCI previa']];
+  }
+  var bfs = {
+    id: 'bfs', name: 'Bariatric Frailty Score', domain: 'Fragilidad y adulto mayor', level: 'A',
+    what: 'Fragilidad por déficit acumulado (todas las edades)',
+    cite: 'Sebastian R, et al. Surg Obes Relat Dis 2022;18(6):779-88', doi: '10.1016/j.soard.2022.02.018',
+    needs: ['bmi', 'functional'],
+    compute: function (c) {
+      var it = bfsItems(c).concat([[!!c.mobilityDevice, 'Dispositivo de ayuda para la marcha']]);
+      var s = it.filter(function (i) { return i[0]; }).length;
+      return { value: s + ' / 10', stratum: s >= 5 ? 'Alto (5–10)' : 'Bajo (0–4)', tone: s >= 5 ? 'red' : 'blue', score: s,
+        lines: it.map(function (i) { return (i[0] ? '✓ ' : '· ') + i[1]; }),
+        alert: s >= 5 ? 'BFS alto: más alta no domiciliaria, estadía prolongada y mortalidad.' : null };
+    }
+  };
+  var mbfs = {
+    id: 'mbfs', name: 'mBFS (≥ 60 años)', domain: 'Fragilidad y adulto mayor', level: 'A',
+    what: 'Fragilidad en adultos ≥ 60 años',
+    cite: 'Sebastian R, et al. Surg Obes Relat Dis 2026;22(2):206-18', doi: '10.1016/j.soard.2025.10.002',
+    needs: ['age', 'bmi', 'functional'],
+    gate: function (c) { return num(c.age) >= 60 ? null : 'Validado solo en pacientes de 60 años o más.'; },
+    compute: function (c) {
+      var it = bfsItems(c), s = it.filter(function (i) { return i[0]; }).length;
+      return { value: s + ' / 9', stratum: s >= 5 ? 'Alto (5–9)' : 'Bajo (0–4)', tone: s >= 5 ? 'red' : 'blue', score: s,
+        lines: it.map(function (i) { return (i[0] ? '✓ ' : '· ') + i[1]; }),
+        alert: s >= 5 ? 'mBFS alto: más complicaciones cardiacas, pulmonares y renales y mortalidad a 30 días.' : null };
+    }
+  };
+
+  var SCORES = [osmrs, eoss, barimace, finks, aminian, bariclot, diarem, diarem2, addiarem, ims, abcd, diabetter, sophia, gao, gerdchk, bfs, mbfs];
+
+  function normalize(c0) {
+    var c = Object.assign({}, c0);
+    if (c.meds) {
+      var m = c.meds;
+      c.nMeds = ['metformin', 'su', 'tzd', 'dpp4', 'glp1', 'sglt2', 'insulin'].filter(function (k) { return !!m[k]; }).length;
+      c.insulin = !!m.insulin;
+      c.otherAgent = !!(m.su || m.tzd);
+      c.otherNonInsulin = !!(m.su || m.tzd || m.dpp4 || m.glp1 || m.sglt2);
+    }
+    if (!c.dm) { delete c.dmYears; }
+    return c;
+  }
+
+  function run(c0, ids) {
+    var c = normalize(c0);
+    var out = [];
+    SCORES.forEach(function (s) {
+      if (ids && ids.indexOf(s.id) < 0) return;
+      var base = { id: s.id, name: s.name, domain: s.domain, level: s.level, what: s.what, cite: s.cite, doi: s.doi };
+      var g = s.gate ? s.gate(c) : null;
+      if (g) { out.push(Object.assign(base, { status: 'na', reason: g })); return; }
+      var m = missing(c, s.needs);
+      if (m.length) { out.push(Object.assign(base, { status: 'missing', missing: m, missingKeys: missingKeys(c, s.needs) })); return; }
+      var r = s.compute(c);
+      if (r.missing) { out.push(Object.assign(base, { status: 'missing', missing: r.missing, missingKeys: keysFromLabels(r.missing) })); return; }
+      if (r.na) { out.push(Object.assign(base, { status: 'na', reason: r.na })); return; }
+      out.push(Object.assign(base, { status: 'ok' }, r));
+    });
+    return out;
+  }
+
+  var api = { SCORES: SCORES, run: run, normalize: normalize, bmiOf: bmiOf, imsDuration: imsDuration, sophiaTWL: sophiaTWL, finksOne: finksOne, aminianOne: aminianOne, PROC_LABEL: PROC_LABEL };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.BariScore = api;
+})(this);
+
+</script>
+<script>
+(function(){
+'use strict';
+var B = window.BariScore;
+var ALL = B.SCORES.map(function(s){return s.id;});
+var sel = {}; ALL.forEach(function(id){sel[id]=true;});
+
+var BOOL_DEFAULTS = {smoker:false,htn:false,osa:false,chf:false,dyspnea:false,pulmHTN:false,renal:false,copd:false,priorMI:false,priorPCI:false,
+  priorCardiacSurgery:false,anticoag:false,priorVTE:false,ivcFilter:false,dvtStasis:false,paraplegia:false,mobilityDevice:false,dm:false,
+  weeklyReflux:false,hiatalHernia:false,reoperation:false,hisDistanceGt1:false,fullHisMobilization:false,ppiGt12:false};
+function fresh(){ return Object.assign({functional:'indep',procedure:'COMPARE',asa:'3',meds:{}}, BOOL_DEFAULTS); }
+var c = fresh();
+
+/* Campos: key, etiqueta, tipo, scores que lo usan */
+var HELP = {"age": "Edad en años cumplidos al momento de la evaluación.", "sex": "Sexo biológico. Varios modelos lo usan como factor de riesgo; por ejemplo, ser hombre suma en OS-MRS y en Finks.", "weight": "Peso actual en kilos, antes de la cirugía. Con la talla se calcula el IMC.", "height": "Talla en centímetros, por ejemplo 168.", "smoker": "Fuma actualmente. En SOPHIA cambia la predicción de pérdida de peso al año.", "htn": "Hipertensión arterial que requiere fármacos.", "osa": "Apnea obstructiva del sueño diagnosticada por polisomnografía o poligrafía.", "chf": "Insuficiencia cardiaca congestiva en los 30 días previos a la cirugía (definición NSQIP).", "dyspnea": "Falta de aire en reposo (definición NSQIP). No marcar si solo aparece con el esfuerzo.", "pulmHTN": "Hipertensión pulmonar o síndrome de obesidad-hipoventilación. En OS-MRS cuenta como riesgo de TEP.", "renal": "Insuficiencia renal crónica o diálisis.", "copd": "Enfermedad pulmonar obstructiva crónica diagnosticada.", "priorMI": "Infarto agudo de miocardio previo.", "priorPCI": "Angioplastía coronaria previa, con o sin stent.", "priorCardiacSurgery": "Cirugía cardiaca previa, por ejemplo bypass coronario o cirugía valvular.", "anticoag": "Anticoagulación terapéutica crónica antes de la cirugía (antagonistas de la vitamina K o anticoagulantes orales directos). No incluye la profilaxis.", "priorVTE": "Antecedente de trombosis venosa profunda o de tromboembolismo pulmonar.", "ivcFilter": "Tiene un filtro de vena cava inferior. En OS-MRS cuenta como riesgo de TEP.", "dvtStasis": "Insuficiencia venosa con signos de estasis: edema crónico, cambios tróficos de la piel o úlcera venosa.", "functional": "Capacidad para las actividades de la vida diaria en los 30 días previos: independiente, con ayuda parcial o con dependencia total (definición NSQIP/MBSAQIP).", "asa": "Clasificación ASA de riesgo anestésico.", "eoss": "Edmonton Obesity Staging System. 0: sin factores de riesgo. 1: factores subclínicos o síntomas leves. 2: enfermedad crónica establecida (HTA, DM2, SAHOS, artrosis). 3: daño de órgano blanco (infarto, insuficiencia cardiaca, ACV). 4: discapacidad grave por la obesidad.", "paraplegia": "Paraplejia o paraparesia.", "mobilityDevice": "Usa bastón, andador o silla de ruedas para desplazarse.", "dm": "Diabetes tipo 2 diagnosticada. Al marcarla aparecen los datos para los scores de remisión.", "glucoseStatus": "Para quien no tiene diabetes: glicemia normal o intolerancia a la glucosa (prediabetes). Lo usa SOPHIA.", "dmYears": "Años desde el diagnóstico de la diabetes tipo 2.", "hba1c": "Hemoglobina glicosilada más reciente en %, idealmente de los últimos 3 meses.", "cpeptide": "Péptido C en ayunas, en ng/mL. Refleja cuánta insulina propia produce el páncreas.", "meds": "Marque todos los fármacos que usa hoy para la diabetes. Cuentan el número de fármacos y el uso de insulina.", "gerdq": "Puntaje del cuestionario GerdQ: 6 preguntas, de 0 a 18 puntos. 8 o más sugiere ERGE.", "la": "Grado de esofagitis en la endoscopia preoperatoria, según la clasificación de Los Ángeles. B o más se considera ERGE.", "hill": "Grado de la válvula gastroesofágica vista en retroflexión (Hill I a IV). III y IV indican una válvula alterada.", "afs": "Clasificación endoscópica de la unión esofagogástrica de la American Foregut Society. Combina el largo axial de la hernia, el diámetro del hiato y la presencia de la válvula. I: normal (válvula presente, hiato cerrado, sin hernia). II: alteración parcial (sin válvula, hiato algo abierto, sin hernia). III: alteración moderada (sin válvula, hiato abierto, hernia axial pequeña).", "aet": "Tiempo de exposición ácida en la pHmetría de 24 horas: % del tiempo con pH < 4. Más de 6% es patológico. Dejar vacío si no se hizo.", "demeester": "Puntaje DeMeester de la pHmetría de 24 horas. Más de 14,7 es patológico. Dejar vacío si no se hizo.", "weeklyReflux": "Pirosis o regurgitación al menos una vez por semana, con GerdQ menor de 8: síntomas tipo reflujo sin ERGE confirmada. Suma 4 en el score de Gao.", "hiatalHernia": "Hernia hiatal en la endoscopia o en la imagen preoperatoria.", "procedure": "Técnica que se planifica. \"Comparar manga y bypass\" calcula ambas y las muestra lado a lado.", "opTime": "Duración de la cirugía en horas, planificada o real. Por ejemplo 1,5.", "los": "Días de hospitalización después de la cirugía, planificados o reales. En el score de Aminian, 3 días o más suma riesgo.", "reoperation": "Reintervención durante la hospitalización de la cirugía, antes del alta. Lo usa el score de TEV post-alta de Aminian.", "hisDistanceGt1": "En la manga, el último disparo de la engrapadora termina a más de 1 cm del ángulo de His, dejando un margen de fondo gástrico. En el score de Gao resta 4 puntos porque protege del reflujo. No marcar si la línea de grapas queda a menos de 1 cm del His.", "fullHisMobilization": "Se disecó por completo la almohadilla grasa de la unión esofagogástrica, dejando expuestos el pilar izquierdo y el ángulo de His. En el score de Gao suma 1 punto, porque altera la válvula antirreflujo natural.", "ppiGt12": "Se indicará un inhibidor de la bomba de protones (omeprazol u otro) por más de 12 semanas después de la manga. En el score de Gao resta 1 punto."};
+function info(f){ return HELP[f.k]? '<button type="button" class="info" data-h="'+f.k+'" aria-label="Qué significa: '+esc(f.l)+'" aria-expanded="false">i</button>' : ''; }
+var SECTIONS = [
+ {t:'Básicos', f:[
+  {k:'age',l:'Edad (años)',type:'num',u:['osmrs','barimace','finks','aminian','diarem','diarem2','addiarem','abcd','sophia','mbfs']},
+  {k:'sex',l:'Sexo',type:'sel',o:[['','—'],['M','Hombre'],['F','Mujer']],u:['osmrs','barimace','finks','aminian']},
+  {k:'weight',l:'Peso (kg)',type:'num',u:['osmrs','barimace','finks','aminian','abcd','sophia','gao','bfs','mbfs']},
+  {k:'height',l:'Talla (cm)',type:'num',u:['osmrs','barimace','finks','aminian','abcd','sophia','gao','bfs','mbfs']},
+  {k:'smoker',l:'Tabaquismo activo',type:'ck',u:['sophia']}
+ ], bmi:true},
+ {t:'Comorbilidades', f:[
+  {k:'htn',l:'HTA en tratamiento',type:'ck',u:['osmrs','barimace','bfs','mbfs']},
+  {k:'osa',l:'SAHOS',type:'ck',u:['bfs','mbfs']},
+  {k:'chf',l:'Insuficiencia cardiaca',type:'ck',u:['aminian']},
+  {k:'dyspnea',l:'Disnea en reposo',type:'ck',u:['aminian']},
+  {k:'pulmHTN',l:'HTP o hipoventilación',type:'ck',u:['osmrs']},
+  {k:'renal',l:'Insuficiencia renal',type:'ck',u:['barimace']},
+  {k:'copd',l:'EPOC',type:'ck',u:['bfs','mbfs']},
+  {k:'priorMI',l:'IAM previo',type:'ck',u:['barimace','bfs','mbfs']},
+  {k:'priorPCI',l:'PCI previa',type:'ck',u:['barimace','bfs','mbfs']},
+  {k:'priorCardiacSurgery',l:'Cirugía cardiaca previa',type:'ck',u:['barimace']},
+  {k:'anticoag',l:'Anticoagulación terapéutica',type:'ck',u:['barimace']}
+ ]},
+ {t:'Antecedente tromboembólico', f:[
+  {k:'priorVTE',l:'TEV previo (TVP o TEP)',type:'ck',u:['osmrs','barimace','finks','bariclot','bfs','mbfs']},
+  {k:'ivcFilter',l:'Filtro de vena cava',type:'ck',u:['osmrs']},
+  {k:'dvtStasis',l:'Estasis venosa',type:'ck',u:['bfs','mbfs']}
+ ]},
+ {t:'Estado funcional y estadio', f:[
+  {k:'functional',l:'Estado funcional',type:'sel',o:[['indep','Independiente'],['partial','Parcialmente dependiente'],['total','Totalmente dependiente']],u:['bariclot','bfs','mbfs']},
+  {k:'asa',l:'ASA',type:'sel',o:[['1','I'],['2','II'],['3','III'],['4','IV'],['5','V']],u:['barimace']},
+  {k:'eoss',l:'Estadio EOSS',type:'sel',o:[['','—'],['0','0 · sin factores de riesgo'],['1','1 · subclínico o síntomas leves'],['2','2 · enfermedad crónica establecida'],['3','3 · daño de órgano blanco'],['4','4 · discapacidad grave']],u:['eoss'],wide:true},
+  {k:'paraplegia',l:'Paraplejia',type:'ck',u:['aminian']},
+  {k:'mobilityDevice',l:'Ayuda para la marcha',type:'ck',u:['bfs']}
+ ]},
+ {t:'Diabetes tipo 2', f:[
+  {k:'dm',l:'Tiene diabetes tipo 2',type:'ck',u:['diarem','diarem2','addiarem','ims','abcd','diabetter','sophia','bfs','mbfs','barimace']},
+  {k:'glucoseStatus',l:'Sin DM2: tolerancia a la glucosa',type:'sel',o:[['NG','Normal'],['IGT','Intolerancia']],u:['sophia'],when:function(){return !c.dm;}},
+  {k:'dmYears',l:'Años de evolución',type:'num',u:['diarem2','addiarem','ims','abcd','diabetter','sophia'],when:function(){return c.dm;}},
+  {k:'hba1c',l:'HbA1c (%)',type:'num',u:['diarem','diarem2','addiarem','ims','diabetter'],when:function(){return c.dm;}},
+  {k:'cpeptide',l:'Péptido C (ng/mL)',type:'num',u:['abcd'],when:function(){return c.dm;}},
+  {k:'meds',l:'Antidiabéticos en uso',type:'meds',u:['diarem','addiarem','ims','diabetter','barimace'],when:function(){return c.dm;}}
+ ]},
+ {t:'Reflujo y endoscopia', f:[
+  {k:'gerdq',l:'GerdQ (0–18)',type:'num',u:['gerdchk','gao']},
+  {k:'la',l:'Esofagitis (Los Ángeles)',type:'sel',o:[['','—'],['none','Sin esofagitis'],['A','A'],['B','B'],['C','C'],['D','D']],u:['gerdchk','gao']},
+  {k:'hill',l:'Válvula (Hill)',type:'sel',o:[['','—'],['1','I'],['2','II'],['3','III'],['4','IV']],u:['gerdchk']},
+  {k:'afs',l:'Grado AFS de la UEG',type:'sel',o:[['','—'],['I','I'],['II','II'],['III','III']],u:['gerdchk','gao']},
+  {k:'aet',l:'pHmetría: AET (%)',type:'num',u:['gerdchk','gao']},
+  {k:'demeester',l:'DeMeester',type:'num',u:['gerdchk']},
+  {k:'weeklyReflux',l:'Pirosis o regurgitación semanal',type:'ck',u:['gao']},
+  {k:'hiatalHernia',l:'Hernia hiatal',type:'ck',u:['gerdchk']}
+ ]},
+ {t:'Procedimiento', f:[
+  {k:'procedure',l:'Técnica',type:'sel',o:[['COMPARE','Comparar manga y bypass'],['SG','Manga gástrica'],['RYGB','Bypass en Y de Roux'],['OAGB','Bypass de una anastomosis'],['BAND','Banda gástrica']],u:['finks','aminian','sophia','gao','gerdchk','ims'],wide:true},
+  {k:'opTime',l:'Tiempo operatorio (h)',type:'num',u:['barimace','finks','aminian','bariclot']},
+  {k:'los',l:'Estadía (días)',type:'num',u:['aminian']},
+  {k:'reoperation',l:'Reoperación',type:'ck',u:['aminian']},
+  {k:'hisDistanceGt1',l:'Grapas a > 1 cm del His',type:'ck',u:['gao']},
+  {k:'fullHisMobilization',l:'Movilización completa del His',type:'ck',u:['gao']},
+  {k:'ppiGt12',l:'IBP postoperatorio > 12 semanas',type:'ck',u:['gao']}
+ ]}
+];
+var MEDS=[['metformin','Metformina'],['su','Sulfonilurea'],['tzd','Pioglitazona'],['dpp4','iDPP4'],['glp1','GLP-1'],['sglt2','iSGLT2'],['insulin','Insulina']];
+var NAME = {}; B.SCORES.forEach(function(s){NAME[s.id]=s.name;});
+var ORIGIN = {
+ osmrs:{pop:'Derivación: 2.075 bypass, un centro de EE. UU. (1995–2004). Validación: 4.431 bypass primarios en 4 centros.',src:'Puntos y clases de los artículos de derivación y validación (PDF y PubMed).',more:[['Derivación: DeMaria EJ, Portenier D, Wolfe L. Surg Obes Relat Dis 2007;3(2):134-40','10.1016/j.soard.2007.01.005']]},
+ eoss:{pop:'Propuesta clínica de la Universidad de Alberta (Canadá). Validada en bariátrica en MBSAQIP 2015–2017 (430.238 pacientes).',src:'Tabla 4 del artículo original (PDF).',more:[['Validación bariátrica: Skulsky SL, et al. Surg Endosc 2021;35:7163-73','10.1007/s00464-020-08138-7']]},
+ barimace:{pop:'MBSAQIP 2015–2019: 750.498 mangas y bypass primarios; derivación con los años 2015, 2017 y 2019 y validación con 2016 y 2018.',src:'Ecuación del modelo en el texto de resultados (PDF).',more:[]},
+ finks:{pop:'Michigan Bariatric Surgery Collaborative, 32 hospitales (2006–2011): 27.818 pacientes.',src:'Tabla 2: coeficientes y ecuación con intercepto −8,90 (PDF). Reproduce el ejemplo publicado (0,87%).',more:[]},
+ aminian:{pop:'ACS-NSQIP 2007–2012: 91.963 pacientes; validación con NSQIP 2013: 20.575.',src:'Ecuación logística del texto y Tabla 3 (PDF). Reproduce los 3 ejemplos publicados.',more:[]},
+ bariclot:{pop:'MBSAQIP 2015–2016: 274.221 mangas y bypass laparoscópicos (cohortes de derivación y validación al azar).',src:'Herramienta clínica de la Figura 1 (PDF).',more:[]},
+ diarem:{pop:'Geisinger Health System (EE. UU.): 690 pacientes con DM2 tras bypass, más 2 cohortes de replicación.',src:'Tabla de puntos original, confirmada en Pucci 2018 (PMC).',more:[]},
+ diarem2:{pop:'Geisinger: 307 bypass con duración de DM2 conocida (2009–2015).',src:'Estructura confirmada en el original (PMC); tabla de puntos transcrita de Baldane 2024.',more:[['Tabla de puntos: Baldane S, et al. J Minim Access Surg 2024','10.4103/jmas.jmas_321_23']]},
+ addiarem:{pop:'Francia: 213 pacientes de prueba; confirmación en Francia (134) e Israel (99), un año tras bypass.',src:'Tabla 2 del artículo original (PDF).',more:[]},
+ ims:{pop:'Cleveland Clinic: 659 bypass y mangas con seguimiento ≥ 5 años; validación externa en Barcelona (241).',src:'Nomograma de la Figura 1 (PDF). Reproduce el ejemplo publicado (106 puntos).',more:[]},
+ abcd:{pop:'5 centros de Asia: 63 pacientes de derivación y 176 de validación, con bypass.',src:'Tabla 3 del artículo original (PDF).',more:[['Uso en manga: Lee MH, et al. Obes Surg 2020;30:3669-74','10.1007/s11695-020-04737-4']]},
+ diabetter:{pop:'University College London Hospitals: 210 bypass y mangas; validación en 173 (Londres y Portugal), a 2 años.',src:'Tabla 1 del artículo original (PMC).',more:[]},
+ sophia:{pop:'10.231 pacientes de 12 centros en 10 países, incluidos Brasil y México; entrenamiento en ABOS y BAREVAL (Francia).',src:'Árboles de la Figura 3 del apéndice (acceso abierto en HAL, hal-04192198).',more:[]},
+ gao:{pop:'Multicéntrico en China: 851 mangas (595 de entrenamiento y 256 de validación) sin ERGE previa.',src:'Tabla 3 del artículo (PMC). Sin validación externa.',more:[]},
+ gerdchk:{pop:'Regla propia de BarIAscore que reúne factores con evidencia de 4 estudios recientes.',src:'Umbrales tomados de cada estudio.',more:[['Liu G, et al. Obes Surg 2025;35:4652-61','10.1007/s11695-025-08223-7'],['Semeya AA, et al. BMC Surg 2026;26','10.1186/s12893-026-03531-w'],['Chinn JO, et al. Surg Endosc 2025;39:6934-42','10.1007/s00464-025-12091-8'],['Loayza Mosquera GC, et al. Obes Surg 2026;36:1004-14','10.1007/s11695-025-08312-7']]},
+ bfs:{pop:'MBSAQIP 2015–2018: 650.882 mangas y bypass, de 18 a 80 años.',src:'Ítems tomados de la Tabla 2 de Filardi 2026; cortes del original.',more:[['Ítems: Filardi K, et al. Obes Surg 2026','10.1007/s11695-026-08997-4']]},
+ mbfs:{pop:'MBSAQIP 2015–2022, pacientes ≥ 60 años: 90.239 mangas y 40.272 bypass.',src:'Versión de 9 ítems (sin dispositivo de ayuda), cortes del artículo.',more:[]}
+};
+function renderRefs(){
+  var h='';
+  B.SCORES.forEach(function(sc){
+    var o=ORIGIN[sc.id]||{pop:'',src:'',more:[]};
+    h+='<article class="refc" id="ref-'+sc.id+'"><h3>'+esc(sc.name)+' <span class="lvl">'+sc.level+'</span></h3><div class="what">'+esc(sc.domain)+' · '+esc(sc.what)+'</div><dl>'+
+      '<dt>Población</dt><dd>'+esc(o.pop)+'</dd><dt>Fórmula tomada de</dt><dd>'+esc(o.src)+'</dd>'+
+      '<dt>Referencia</dt><dd>'+esc(sc.cite)+'. <a href="https://doi.org/'+esc(sc.doi)+'" target="_blank" rel="noopener">doi:'+esc(sc.doi)+'</a></dd>';
+    o.more.forEach(function(m){ h+='<dt></dt><dd>'+esc(m[0])+'. <a href="https://doi.org/'+esc(m[1])+'" target="_blank" rel="noopener">doi:'+esc(m[1])+'</a></dd>'; });
+    h+='</dl></article>';
+  });
+  document.getElementById('refList').innerHTML=h;
+}
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+
+function renderChips(){
+  var doms=[], by={};
+  B.SCORES.forEach(function(s){ if(!by[s.domain]){by[s.domain]=[];doms.push(s.domain);} by[s.domain].push(s); });
+  var h='';
+  doms.forEach(function(d){
+    h+='<div class="dom"><div class="dom-t">'+esc(d)+'</div><div class="chips">';
+    by[d].forEach(function(s){ h+='<button type="button" class="chip" data-id="'+s.id+'" aria-pressed="'+(!!sel[s.id])+'" title="'+esc(s.what)+'">'+esc(s.name)+' <span class="lvl">'+s.level+'</span></button>'; });
+    h+='</div></div>';
+  });
+  document.getElementById('chips').innerHTML=h;
+  var n=ALL.filter(function(i){return sel[i];}).length;
+  document.getElementById('selCount').textContent=n+' de '+ALL.length;
+}
+
+function bmiTxt(){ var b=B.bmiOf(c); return b?b.toFixed(1).replace('.',',')+' kg/m²':'—'; }
+function fieldVisible(f){ if(f.when && !f.when()) return false; return f.u.some(function(id){return sel[id];}); }
+
+function renderForm(){
+  var h='';
+  SECTIONS.forEach(function(sec,si){
+    var vis=sec.f.filter(fieldVisible);
+    if(!vis.length) return;
+    var users={}; vis.forEach(function(f){f.u.forEach(function(id){if(sel[id])users[NAME[id]]=1;});});
+    h+='<fieldset class="sec"><div class="sec-h"><h3 title="Lo usan: '+esc(Object.keys(users).join(', '))+'">'+esc(sec.t)+'</h3><span class="used">'+esc(Object.keys(users).join(' · '))+'</span></div>';
+    var nums=vis.filter(function(f){return f.type==='num'||f.type==='sel';}), cks=vis.filter(function(f){return f.type==='ck';}), meds=vis.filter(function(f){return f.type==='meds';});
+    if(nums.length){ h+='<div class="grid2">'; nums.forEach(function(f){
+      var id='f_'+f.k, v=c[f.k]===undefined?'':c[f.k], st=f.wide?' style="grid-column:1/-1"':'';
+      if(f.type==='num') h+='<label class="f"'+st+' for="'+id+'"><span class="lab">'+esc(f.l)+info(f)+'</span><input id="'+id+'" data-k="'+f.k+'" type="number" inputmode="decimal" step="any" value="'+esc(v)+'"></label>';
+      else { h+='<label class="f"'+st+' for="'+id+'"><span class="lab">'+esc(f.l)+info(f)+'</span><select id="'+id+'" data-k="'+f.k+'">'; f.o.forEach(function(o){h+='<option value="'+o[0]+'"'+(String(v)===o[0]?' selected':'')+'>'+esc(o[1])+'</option>';}); h+='</select></label>'; }
+    }); h+='</div>'; }
+    if(cks.length){ h+='<div class="checks" style="margin-top:6px">'; cks.forEach(function(f){ h+='<div class="ckw"><label class="ck"><input type="checkbox" data-k="'+f.k+'"'+(c[f.k]?' checked':'')+'>'+esc(f.l)+'</label>'+info(f)+'</div>'; }); h+='</div>'; }
+    if(meds.length){ h+='<div class="f" style="margin-top:8px"><span class="lab">Antidiabéticos en uso'+info(meds[0])+'</span></div><div class="checks">'; MEDS.forEach(function(m){ h+='<label class="ck"><input type="checkbox" data-med="'+m[0]+'"'+(c.meds[m[0]]?' checked':'')+'>'+m[1]+'</label>'; }); h+='</div>'; }
+    if(sec.bmi){ h+='<div class="calc"><span>IMC calculado</span><b id="bmiOut">'+bmiTxt()+'</b></div>'; }
+    h+='</fieldset>';
+  });
+  if(!h) h='<div class="empty">Elija al menos un score.</div>';
+  document.getElementById('form').innerHTML=h;
+}
+
+function tonePill(r){
+  if(r.status==='na') return '<span class="pill p-na">No aplica</span>';
+  if(r.status==='missing') return '<span class="pill p-na">Faltan datos</span>';
+  return '<span class="pill p-'+(r.tone==='red'?'red':r.tone==='amber'?'amber':'blue')+'">'+esc(r.stratum)+'</span>';
+}
+
+function comparison(res){
+  if(c.procedure!=='COMPARE') return '';
+  var g=function(id){return res.filter(function(r){return r.id===id && r.status==='ok';})[0];};
+  var rows=[], favRYGB=0, favSG=0;
+  var ims=g('ims'); if(ims){ rows.push(['Remisión de DM2 (IMS '+ims.value+')', ims.stage==='Severa'?'Similar (baja)':'Menor', ims.stage==='Severa'?'Similar (baja)':(ims.stage==='Leve'?'Algo mayor':'Mayor')]); if(ims.stage==='Moderada')favRYGB++; if(ims.stage==='Severa')favSG++; }
+  var so=g('sophia'); if(so && so.byProc.SG && so.byProc.RYGB){ rows.push(['IMC a 5 años (SOPHIA)', so.byProc.SG.bmi[2].toFixed(1).replace('.',','), so.byProc.RYGB.bmi[2].toFixed(1).replace('.',',')]); if(so.byProc.RYGB.bmi[2]<so.byProc.SG.bmi[2]-1)favRYGB++; }
+  var ch=g('gerdchk'), gao=g('gao'); var gerdHigh=(ch&&ch.score>=3)||(gao&&gao.tone==='red');
+  if(ch||gao){ rows.push(['Riesgo de ERGE', gerdHigh?'Alto':(ch&&ch.score>0)||(gao&&gao.tone==='amber')?'Intermedio':'Bajo', 'Menor (técnica antirreflujo)']); if(gerdHigh)favRYGB++; }
+  var fi=g('finks'); if(fi&&fi.byProc.SG&&fi.byProc.RYGB) rows.push(['TEV a 30 días (Finks)', (fi.byProc.SG.p*100).toFixed(2).replace('.',',')+'%', (fi.byProc.RYGB.p*100).toFixed(2).replace('.',',')+'%']);
+  if(rows.length<2) return '';
+  var v = favRYGB>favSG ? 'Con estos datos, el perfil favorece el bypass' : favSG>favRYGB ? 'Con estos datos, el perfil favorece la manga' : 'Con estos datos, ninguna técnica se impone claramente';
+  var h='<section class="panel"><h2>Manga vs bypass para este caso</h2><table class="cmp"><thead><tr><th>Dominio</th><th>Manga</th><th>Bypass</th></tr></thead><tbody>';
+  rows.forEach(function(r){h+='<tr><td>'+esc(r[0])+'</td><td class="n">'+esc(r[1])+'</td><td class="n">'+esc(r[2])+'</td></tr>';});
+  return h+'</tbody></table><div class="verdict"><b>'+v+'.</b> Apoyo a la decisión, no indicación.</div></section>';
+}
+
+var RINFO={};
+function sophiaTable(r){
+  var f1=function(x){return x.toFixed(1).replace('.',',');}, h='';
+  Object.keys(r.byProc).forEach(function(pr){ var d=r.byProc[pr];
+    h+='<table class="soph"><caption>'+esc(B.PROC_LABEL[pr])+'</caption><thead><tr><th>Año</th><th>Pérdida</th><th>Kg perdidos</th><th>Peso</th><th>IMC</th></tr></thead><tbody>';
+    var w0=Number(c.weight), b0=B.bmiOf(c); h+='<tr class="soph0"><td>Hoy</td><td>—</td><td>—</td><td>'+f1(w0)+'</td><td>'+f1(b0)+'</td></tr>';
+    [1,2,5].forEach(function(y,i){ h+='<tr><td>'+y+'</td><td>'+Math.round(d.twl[i]*100)+'%</td><td>'+f1(d.kgLost[i])+'</td><td>'+f1(d.weight[i])+'</td><td>'+f1(d.bmi[i])+'</td></tr>'; });
+    h+='</tbody></table>';
+  });
+  return h+'<div class="soph-n">Calculado con el peso y la talla ingresados. Pérdida = % de pérdida de peso total. El modelo está validado a 1, 2 y 5 años.</div>';
+}
+function missBox(r){
+  var keys=(r.missingKeys||[]).filter(function(k){return FIELD[k];});
+  var h='<div class="missbox"><div class="miss"><b>Faltan:</b> '+esc(r.missing.join(', '))+'</div>';
+  if(keys.length){
+    h+='<div class="qgrid">';
+    keys.forEach(function(k){ var f=FIELD[k], id='q_'+r.id+'_'+k;
+      if(f.type==='num') h+='<label class="f" for="'+id+'">'+esc(f.l)+'<input id="'+id+'" data-qk="'+k+'" type="number" inputmode="decimal" step="any"></label>';
+      else if(f.type==='sel'){ h+='<label class="f" for="'+id+'">'+esc(f.l)+'<select id="'+id+'" data-qk="'+k+'">'; f.o.forEach(function(o){h+='<option value="'+o[0]+'"'+(String(c[k]||'')===o[0]?' selected':'')+'>'+esc(o[1])+'</option>';}); h+='</select></label>'; }
+      else if(f.type==='ck') h+='<label class="ck"><input type="checkbox" data-qk="'+k+'">'+esc(f.l)+'</label>';
+    });
+    h+='</div><button type="button" class="mini fill qapply" data-card="'+r.id+'">Completar y calcular</button>';
+  } else h+='<button type="button" class="mini qgo">Completar en el formulario</button>';
+  return h+'</div>';
+}
+function applyQuick(card){
+  card.querySelectorAll('[data-qk]').forEach(function(el){ var k=el.dataset.qk;
+    if(el.type==='checkbox') c[k]=el.checked; else if(el.value!=='') c[k]=el.value; });
+  renderForm(); renderResults();
+}
+function renderResults(){
+  var ids=ALL.filter(function(i){return sel[i];});
+  var res=B.run(c, ids);
+  stats={n:ids.length, ok:res.filter(function(r){return r.status==='ok';}).length, missing:res.filter(function(r){return r.status==='missing';}).length, na:res.filter(function(r){return r.status==='na';}).length, alerts:0};
+  var alerts=res.filter(function(r){return r.status==='ok'&&r.alert;}).map(function(r){return r.alert;});
+  stats.alerts=alerts.length; var b=document.getElementById('badge'); b.textContent=alerts.length; b.classList.toggle('hide',!alerts.length); updateBar();
+  var h='';
+  if(!ids.length){ document.getElementById('results').innerHTML='<div class="empty">Elija scores para ver resultados.</div>'; updateBar(); return; }
+  var okN=res.filter(function(r){return r.status==='ok';}).length;
+  h+='<div class="rhead"><div><h2>Resultados</h2><p class="sub">'+okN+' de '+res.length+' scores calculados · '+stats.missing+' esperan datos · '+stats.na+' no aplican</p></div></div>';
+  var top='';
+  if(alerts.length){ top+='<section class="alerts" role="alert"><h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l10 18H2L12 3z" stroke="#B3261E" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v5M12 18v.5" stroke="#B3261E" stroke-width="2.2" stroke-linecap="round"/></svg>'+alerts.length+(alerts.length===1?' alerta crítica':' alertas críticas')+'</h2><ul>'; alerts.forEach(function(a){top+='<li>'+esc(a)+'</li>';}); top+='</ul></section>'; }
+  top+=comparison(res);
+  if(top) h+='<div class="rtop">'+top+'</div>';
+  h+='<div class="cards" style="margin-top:14px">';
+  var lastDom='';
+  res.forEach(function(r){
+    if(r.domain!==lastDom){ h+='<div class="dom-r">'+esc(r.domain)+'</div>'; lastDom=r.domain; }
+    if(r.info) RINFO[r.id]={t:r.name,h:r.info};
+    h+='<article class="card'+(r.status==='ok'&&r.tone==='red'?' t-red':'')+'"><div class="card-h"><div><h3>'+esc(r.name)+' <span class="lvl">'+r.level+'</span>'+(r.info?' <button type="button" class="info" data-r="'+r.id+'" aria-label="Cómo leer este score" aria-expanded="false">i</button>':'')+'</h3><div class="what">'+esc(r.what)+'</div></div>';
+    if(r.status==='ok') h+='<div class="val">'+esc(r.value)+'</div>';
+    h+='</div>'+tonePill(r);
+    if(r.status==='missing') h+=missBox(r);
+    if(r.status==='na') h+='<div class="miss">'+esc(r.reason)+'</div>';
+    if(r.status==='ok'&&r.id==='sophia'&&r.byProc) h+=sophiaTable(r);
+    if(r.status==='ok'&&r.range){ var g=r.range; h+='<div class="range"><span class="range-t">Según la técnica</span><span class="pill p-'+(g.bestCat[1]==='red'?'red':g.bestCat[1]==='amber'?'amber':'blue')+'">'+g.best+' · '+g.bestCat[0]+'</span><span class="range-a" aria-hidden="true">a</span><span class="pill p-'+(g.worstCat[1]==='red'?'red':g.worstCat[1]==='amber'?'amber':'blue')+'">'+g.worst+' · '+g.worstCat[0]+'</span></div>'; }
+    if(r.status==='ok'){ h+='<details><summary>Cómo se calculó</summary><ul>'; r.lines.forEach(function(l){h+='<li>'+esc(l)+'</li>';}); h+='</ul></details>'; if(r.note) h+='<div class="note">'+esc(r.note)+'</div>'; }
+    h+='<div class="ref"><span title="'+esc(r.cite)+'">'+esc(r.cite.split(';')[0].split('(')[0].trim())+'</span> · <a href="https://doi.org/'+esc(r.doi)+'" target="_blank" rel="noopener" title="doi:'+esc(r.doi)+'">DOI</a> · <button type="button" class="srclink" data-src="'+r.id+'">Origen del score</button></div></article>';
+  });
+  h+='</div>';
+  document.getElementById('results').innerHTML=h;
+}
+
+function all(){ renderChips(); renderForm(); renderResults(); }
+var stats={n:0,ok:0,missing:0,na:0,alerts:0};
+
+document.getElementById('chips').addEventListener('click',function(e){ var b=e.target.closest('.chip'); if(!b)return; sel[b.dataset.id]=!sel[b.dataset.id]; all(); });
+document.getElementById('allBtn').addEventListener('click',function(){ ALL.forEach(function(i){sel[i]=true;}); all(); });
+document.getElementById('noneBtn').addEventListener('click',function(){ sel={}; all(); });
+var form=document.getElementById('form');
+function onField(e){
+  var t=e.target;
+  if(t.dataset.med){ c.meds[t.dataset.med]=t.checked; renderResults(); return; }
+  var k=t.dataset.k; if(!k) return;
+  if(t.type==='checkbox') c[k]=t.checked; else c[k]= t.value===''?undefined:t.value;
+  if(k==='weight'||k==='height'){ var o=document.getElementById('bmiOut'); if(o) o.textContent=bmiTxt(); }
+  if(k==='dm'){ renderForm(); var el=form.querySelector('[data-k="dm"]'); if(el) el.focus(); }
+  renderResults();
+}
+form.addEventListener('input',onField); form.addEventListener('change',onField);
+var FIELD={}; SECTIONS.forEach(function(sec){ sec.f.forEach(function(f){ FIELD[f.k]=f; }); });
+var tip=document.createElement('div'); tip.id='tip'; tip.setAttribute('role','tooltip'); tip.hidden=true; document.body.appendChild(tip);
+var tipFor=null, canHover=window.matchMedia('(hover:hover)').matches;
+function showTip(b){ var html;
+  if(b.dataset.r){ var ri=RINFO[b.dataset.r]; if(!ri) return; html='<b>'+esc(ri.t)+'</b><br>'+esc(ri.h); }
+  else { var f=FIELD[b.dataset.h]; if(!f) return; html='<b>'+esc(f.l)+'</b><br>'+esc(HELP[f.k])+'<div class="tip-u">Lo usa: '+esc(f.u.map(function(i){return NAME[i];}).join(', '))+'</div>'; }
+  if(tipFor&&tipFor!==b) tipFor.setAttribute('aria-expanded','false');
+  tip.innerHTML=html;
+  tip.hidden=false; var r=b.getBoundingClientRect(), w=tip.offsetWidth, h=tip.offsetHeight;
+  var x=Math.min(Math.max(8,r.left+r.width/2-w/2), window.innerWidth-w-8), y=r.bottom+8;
+  if(y+h>window.innerHeight-80) y=Math.max(8,r.top-h-8);
+  tip.style.left=x+'px'; tip.style.top=y+'px'; tipFor=b; b.setAttribute('aria-expanded','true'); }
+function hideTip(){ if(tipFor) tipFor.setAttribute('aria-expanded','false'); tip.hidden=true; tipFor=null; }
+form.addEventListener('click',function(e){ var b=e.target.closest('.info'); if(!b) return; e.preventDefault(); e.stopPropagation(); if(tipFor===b && !canHover) hideTip(); else showTip(b); });
+form.addEventListener('mouseover',function(e){ var b=e.target.closest('.info'); if(b&&canHover) showTip(b); });
+form.addEventListener('mouseout',function(e){ var b=e.target.closest('.info'); if(b&&canHover) hideTip(); });
+form.addEventListener('focusin',function(e){ var b=e.target.closest('.info'); if(b&&canHover) showTip(b); });
+form.addEventListener('focusout',function(e){ if(e.target.closest('.info')&&canHover) hideTip(); });
+document.getElementById('results').addEventListener('click',function(e){
+  var b=e.target.closest('.qapply'); if(b){ applyQuick(b.closest('.card')); return; }
+  if(e.target.closest('.qgo')) view('datos');
+});
+document.getElementById('results').addEventListener('keydown',function(e){ if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.qk){ e.preventDefault(); applyQuick(e.target.closest('.card')); } });
+[document.getElementById('results')].forEach(function(el){
+  el.addEventListener('click',function(e){ var b=e.target.closest('.info'); if(!b) return; e.preventDefault(); e.stopPropagation(); if(tipFor===b && !canHover) hideTip(); else showTip(b); });
+  el.addEventListener('mouseover',function(e){ var b=e.target.closest('.info'); if(b&&canHover) showTip(b); });
+  el.addEventListener('mouseout',function(e){ var b=e.target.closest('.info'); if(b&&canHover) hideTip(); });
+  el.addEventListener('focusin',function(e){ var b=e.target.closest('.info'); if(b&&canHover) showTip(b); });
+  el.addEventListener('focusout',function(e){ if(e.target.closest('.info')&&canHover) hideTip(); });
+});
+document.addEventListener('click',function(e){ if(!e.target.closest('.info')) hideTip(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') hideTip(); });
+window.addEventListener('scroll',hideTip,true);
+
+document.getElementById('demoBtn').addEventListener('click',function(){
+  c=Object.assign(fresh(),{age:'58',sex:'M',weight:'150',height:'170',htn:true,osa:true,dm:true,dmYears:'6',hba1c:'7.8',cpeptide:'3.1',
+    meds:{metformin:true,dpp4:true},eoss:'2',gerdq:'9',la:'B',hill:'3',afs:'II',hiatalHernia:true,opTime:'1.5',los:'2'});
+  ALL.forEach(function(i){sel[i]=true;}); all();
+});
+document.getElementById('clearBtn').addEventListener('click',function(){ c=fresh(); all(); });
+var isMobile=function(){return window.matchMedia('(max-width:900px)').matches;};
+var prevView='scores';
+function view(v,keep){ if(v!=='fuentes') prevView=v; document.body.dataset.view=v;
+  document.querySelectorAll('.step').forEach(function(b){ if(b.dataset.go===v) b.setAttribute('aria-current','step'); else b.removeAttribute('aria-current'); });
+  updateBar(); if(!keep) window.scrollTo(0,0); }
+function updateBar(){
+  var v=document.body.dataset.view, info=document.getElementById('abInfo'), back=document.getElementById('abBack'), next=document.getElementById('abNext');
+  var m=isMobile(), entrada=(v==='scores'||v==='datos');
+  back.classList.remove('hide'); next.classList.remove('hide'); next.disabled=false;
+  var ready='<b>'+stats.ok+'</b> listos · '+stats.missing+' con datos faltantes';
+  if(v==='scores' && m){ info.innerHTML='<b>'+stats.n+'</b> de '+ALL.length+' scores elegidos'; back.classList.add('hide'); next.textContent='Siguiente: datos'; next.dataset.go='datos'; next.disabled=!stats.n; }
+  else if(entrada){ info.innerHTML=stats.n? '<b>'+stats.n+'</b> scores elegidos · '+ready : 'Elija al menos un score'; if(m){back.textContent='Scores'; back.dataset.go='scores';} else back.classList.add('hide'); next.textContent=m?'Calcular':'Calcular y ver resultados'; next.dataset.go='resultados'; next.disabled=!stats.n; }
+  else if(v==='resultados'){ info.innerHTML=stats.n? '<b>'+stats.ok+'</b> de '+stats.n+' calculados'+(stats.alerts?' · <b style="color:#B3261E">'+stats.alerts+' alertas</b>':''):''; back.textContent='Editar datos'; back.dataset.go='datos'; next.textContent='Cambiar scores'; next.dataset.go='scores'; next.classList.add('ghost'); return; }
+  else { info.textContent='Origen y referencia de cada score'; back.textContent='Volver'; back.dataset.go=prevView; next.classList.add('hide'); }
+  next.classList.remove('ghost');
+}
+function goRef(id){ view('fuentes',true); var el=document.getElementById('ref-'+id); if(el){ el.scrollIntoView({behavior:'smooth',block:'start'}); el.style.outline='3px solid #B8964F'; setTimeout(function(){el.style.outline='';},1800);} }
+document.getElementById('results').addEventListener('click',function(e){ var b=e.target.closest('.srclink'); if(b) goRef(b.dataset.src); });
+document.querySelector('.toplink').addEventListener('click',function(e){ e.preventDefault(); view('fuentes'); });
+document.querySelector('.steps').addEventListener('click',function(e){ var b=e.target.closest('.step'); if(b) view(b.dataset.go); });
+['abBack','abNext'].forEach(function(id){ document.getElementById(id).addEventListener('click',function(){ view(this.dataset.go); }); });
+window.addEventListener('resize',updateBar);
+renderRefs(); all(); view('scores',true);
+})();
+</script>
+</body>
+</html>
