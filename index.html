@@ -262,7 +262,7 @@ footer{max-width:1320px;margin:0 auto;padding:0 20px 100px;font-size:12px;color:
 </section>
 <footer>
   <p><b>Apoyo a la decisión clínica.</b> Cada resultado proviene de la fórmula publicada que se cita en su tarjeta, calculada de forma determinística en este dispositivo. No reemplaza el juicio del cirujano; fuera de la población de derivación el resultado es orientativo.</p>
-  <p>BarIAscore implementa métodos publicados en revistas revisadas por pares. No reproduce software, interfaces ni marcas de terceros. Versión de motor 1.0 · 17 scores · 54 pruebas automáticas.</p>
+  <p>BarIAscore implementa métodos publicados en revistas revisadas por pares. No reproduce software, interfaces ni marcas de terceros. Versión de motor 1.0 · 16 scores · 52 pruebas automáticas.</p>
 </footer>
 <div class="actionbar"><div class="ab-in"><span id="abInfo" aria-live="polite"></span><button type="button" class="cta ghost" id="abBack"></button><button type="button" class="cta" id="abNext"></button></div></div>
 
@@ -461,22 +461,6 @@ footer{max-width:1320px;margin:0 auto;padding:0 20px 100px;font-size:12px;color:
 
   /* ---------- Diabetes ---------- */
   function dmGate(c) { return c.dm ? null : 'Solo aplica a pacientes con diabetes tipo 2.'; }
-
-  var diarem = {
-    id: 'diarem', name: 'DiaRem', domain: 'Diabetes tipo 2', level: 'A',
-    what: 'Remisión de DM2 tras bypass',
-    cite: 'Still CD, et al. Lancet Diabetes Endocrinol 2014;2(1):38-45', doi: '10.1016/S2213-8587(13)70070-6',
-    needs: ['age', 'hba1c', 'insulin', 'otherAgent'], gate: dmGate,
-    compute: function (c) {
-      var age = num(c.age), a1c = num(c.hba1c);
-      var pa = age < 40 ? 0 : age < 50 ? 1 : age < 60 ? 2 : 3;
-      var ph = a1c < 6.5 ? 0 : a1c < 7 ? 2 : a1c < 9 ? 4 : 6;
-      var po = c.otherAgent ? 3 : 0, pi = c.insulin ? 10 : 0, s = pa + ph + po + pi;
-      var g = s <= 2 ? ['0–2', '88%', 'blue'] : s <= 7 ? ['3–7', '64%', 'blue'] : s <= 12 ? ['8–12', '23%', 'amber'] : s <= 17 ? ['13–17', '11%', 'amber'] : ['18–22', '2%', 'amber'];
-      return { value: s + ' / 22', stratum: 'Remisión temprana ' + g[1] + ' (grupo ' + g[0] + ')', tone: g[2], score: s,
-        lines: ['Edad: ' + pa, 'HbA1c: ' + ph, 'Antidiabético distinto de metformina: ' + po, 'Insulina: ' + pi] };
-    }
-  };
 
   var diarem2 = {
     id: 'diarem2', name: 'DiaRem2', domain: 'Diabetes tipo 2', level: 'B',
@@ -722,7 +706,7 @@ footer{max-width:1320px;margin:0 auto;padding:0 20px 100px;font-size:12px;color:
     }
   };
 
-  var SCORES = [osmrs, eoss, barimace, finks, aminian, bariclot, diarem, diarem2, addiarem, ims, abcd, diabetter, sophia, gao, gerdchk, bfs, mbfs];
+  var SCORES = [osmrs, eoss, barimace, finks, aminian, bariclot, diarem2, addiarem, ims, abcd, diabetter, sophia, gao, gerdchk, bfs, mbfs];
 
   function normalize(c0) {
     var c = Object.assign({}, c0);
@@ -778,7 +762,7 @@ var HELP = {"age": "Edad en años cumplidos al momento de la evaluación.", "sex
 function info(f){ return HELP[f.k]? '<button type="button" class="info" data-h="'+f.k+'" aria-label="Qué significa: '+esc(f.l)+'" aria-expanded="false">i</button>' : ''; }
 var SECTIONS = [
  {t:'Básicos', f:[
-  {k:'age',l:'Edad (años)',type:'num',u:['osmrs','barimace','finks','aminian','diarem','diarem2','addiarem','abcd','sophia','mbfs']},
+  {k:'age',l:'Edad (años)',type:'num',u:['osmrs','barimace','finks','aminian','diarem2','addiarem','abcd','sophia','mbfs']},
   {k:'sex',l:'Sexo',type:'sel',o:[['','—'],['M','Hombre'],['F','Mujer']],u:['osmrs','barimace','finks','aminian']},
   {k:'weight',l:'Peso (kg)',type:'num',u:['osmrs','barimace','finks','aminian','abcd','sophia','gao','bfs','mbfs']},
   {k:'height',l:'Talla (cm)',type:'num',u:['osmrs','barimace','finks','aminian','abcd','sophia','gao','bfs','mbfs']},
@@ -810,12 +794,12 @@ var SECTIONS = [
   {k:'mobilityDevice',l:'Ayuda para la marcha',type:'ck',u:['bfs']}
  ]},
  {t:'Diabetes tipo 2', f:[
-  {k:'dm',l:'Tiene diabetes tipo 2',type:'ck',u:['diarem','diarem2','addiarem','ims','abcd','diabetter','sophia','bfs','mbfs','barimace']},
+  {k:'dm',l:'Tiene diabetes tipo 2',type:'ck',u:['diarem2','addiarem','ims','abcd','diabetter','sophia','bfs','mbfs','barimace']},
   {k:'glucoseStatus',l:'Sin DM2: tolerancia a la glucosa',type:'sel',o:[['NG','Normal'],['IGT','Intolerancia']],u:['sophia'],when:function(){return !c.dm;}},
   {k:'dmYears',l:'Años de evolución',type:'num',u:['diarem2','addiarem','ims','abcd','diabetter','sophia'],when:function(){return c.dm;}},
-  {k:'hba1c',l:'HbA1c (%)',type:'num',u:['diarem','diarem2','addiarem','ims','diabetter'],when:function(){return c.dm;}},
+  {k:'hba1c',l:'HbA1c (%)',type:'num',u:['diarem2','addiarem','ims','diabetter'],when:function(){return c.dm;}},
   {k:'cpeptide',l:'Péptido C (ng/mL)',type:'num',u:['abcd'],when:function(){return c.dm;}},
-  {k:'meds',l:'Antidiabéticos en uso',type:'meds',u:['diarem','addiarem','ims','diabetter','barimace'],when:function(){return c.dm;}}
+  {k:'meds',l:'Antidiabéticos en uso',type:'meds',u:['addiarem','ims','diabetter','barimace'],when:function(){return c.dm;}}
  ]},
  {t:'Reflujo y endoscopia', f:[
   {k:'gerdq',l:'GerdQ (0–18)',type:'num',u:['gerdchk','gao']},
@@ -846,7 +830,6 @@ var ORIGIN = {
  finks:{pop:'Michigan Bariatric Surgery Collaborative, 32 hospitales (2006–2011): 27.818 pacientes.',src:'Tabla 2: coeficientes y ecuación con intercepto −8,90 (PDF). Reproduce el ejemplo publicado (0,87%).',more:[]},
  aminian:{pop:'ACS-NSQIP 2007–2012: 91.963 pacientes; validación con NSQIP 2013: 20.575.',src:'Ecuación logística del texto y Tabla 3 (PDF). Reproduce los 3 ejemplos publicados.',more:[]},
  bariclot:{pop:'MBSAQIP 2015–2016: 274.221 mangas y bypass laparoscópicos (cohortes de derivación y validación al azar).',src:'Herramienta clínica de la Figura 1 (PDF).',more:[]},
- diarem:{pop:'Geisinger Health System (EE. UU.): 690 pacientes con DM2 tras bypass, más 2 cohortes de replicación.',src:'Tabla de puntos original, confirmada en Pucci 2018 (PMC).',more:[]},
  diarem2:{pop:'Geisinger: 307 bypass con duración de DM2 conocida (2009–2015).',src:'Estructura confirmada en el original (PMC); tabla de puntos transcrita de Baldane 2024.',more:[['Tabla de puntos: Baldane S, et al. J Minim Access Surg 2024','10.4103/jmas.jmas_321_23']]},
  addiarem:{pop:'Francia: 213 pacientes de prueba; confirmación en Francia (134) e Israel (99), un año tras bypass.',src:'Tabla 2 del artículo original (PDF).',more:[]},
  ims:{pop:'Cleveland Clinic: 659 bypass y mangas con seguimiento ≥ 5 años; validación externa en Barcelona (241).',src:'Nomograma de la Figura 1 (PDF). Reproduce el ejemplo publicado (106 puntos).',more:[]},
